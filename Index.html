@@ -7,212 +7,363 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
-body { font-family:'Georgia',serif; background:#f0ece4; color:#1a2b5e; }
+body { font-family:'Georgia',serif; background:#edf0f8; color:#1a2b5e; }
 
-.top-bar { background:#1a2b5e; color:#f0ece4; padding:18px 40px; display:flex; align-items:center; justify-content:space-between; }
-.top-bar .brand { font-size:11px; letter-spacing:3px; text-transform:uppercase; opacity:.7; }
-.top-bar .title { font-size:17px; }
+.top-bar { background:linear-gradient(135deg,#1a2b5e 0%,#243580 100%); color:#f0ece4; padding:20px 40px; display:flex; align-items:center; justify-content:space-between; box-shadow:0 2px 20px rgba(26,43,94,.25); }
+.top-bar .brand { font-size:11px; letter-spacing:3px; text-transform:uppercase; opacity:.65; }
+.top-bar .title { font-size:17px; letter-spacing:.5px; }
+.top-bar .date-badge { background:rgba(255,255,255,.12); border-radius:20px; padding:5px 14px; font-size:11px; letter-spacing:2px; text-transform:uppercase; }
 
-.nav { background:white; border-bottom:1px solid rgba(26,43,94,.1); display:flex; padding:0 40px; }
-.nav-btn { padding:15px 28px; font-family:'Georgia',serif; font-size:13px; letter-spacing:1px; text-transform:uppercase; border:none; background:none; color:#1a2b5e; opacity:.4; cursor:pointer; border-bottom:3px solid transparent; transition:all .2s; }
-.nav-btn.active { opacity:1; border-bottom-color:#1a2b5e; }
-.nav-btn:hover { opacity:.75; }
+.nav { background:white; border-bottom:1px solid rgba(26,43,94,.08); display:flex; padding:0 28px; gap:4px; box-shadow:0 1px 8px rgba(26,43,94,.06); }
+.nav-btn { padding:16px 20px; font-family:'Georgia',serif; font-size:12px; letter-spacing:1.5px; text-transform:uppercase; border:none; background:none; color:#1a2b5e; opacity:.38; cursor:pointer; border-bottom:3px solid transparent; transition:all .2s; }
+.nav-btn.active { opacity:1; border-bottom-color:#1a2b5e; font-weight:bold; }
+.nav-btn:hover { opacity:.7; }
 
-.main { max-width:1060px; margin:0 auto; padding:40px 20px; }
+.main { max-width:1080px; margin:0 auto; padding:36px 24px; }
 .view { display:none; }
 .view.active { display:block; }
 
-.slabel { font-size:10px; letter-spacing:4px; text-transform:uppercase; opacity:.4; margin-bottom:12px; margin-top:36px; }
+.slabel { font-size:10px; letter-spacing:4px; text-transform:uppercase; opacity:.4; margin-bottom:14px; margin-top:36px; }
 .slabel:first-child { margin-top:0; }
 
-.tbl { width:100%; border-collapse:collapse; font-size:13px; background:white; border-radius:8px; overflow:hidden; margin-bottom:8px; }
-.tbl th { background:#1a2b5e; color:#f0ece4; padding:11px 16px; text-align:left; font-size:11px; letter-spacing:1px; font-weight:normal; }
-.tbl td { padding:11px 16px; border-bottom:1px solid rgba(26,43,94,.07); vertical-align:middle; }
+.tbl { width:100%; border-collapse:collapse; font-size:13px; background:white; border-radius:12px; overflow:hidden; margin-bottom:10px; box-shadow:0 2px 14px rgba(26,43,94,.07); }
+.tbl th { background:#1a2b5e; color:#f0ece4; padding:12px 16px; text-align:left; font-size:11px; letter-spacing:1.5px; font-weight:normal; }
+.tbl td { padding:12px 16px; border-bottom:1px solid rgba(26,43,94,.06); vertical-align:middle; }
 .tbl tr:last-child td { border-bottom:none; }
-.tbl tr:nth-child(even) td { background:rgba(26,43,94,.03); }
+.tbl tr:nth-child(even) td { background:rgba(26,43,94,.02); }
 .tbl td:first-child { font-weight:bold; }
 
-.tag { display:inline-block; padding:3px 10px; border-radius:12px; font-size:11px; font-weight:bold; white-space:nowrap; }
-.g { background:#d4edda; color:#1a6632; }
-.a { background:#fff3cd; color:#856404; }
+.tag { display:inline-block; padding:4px 10px; border-radius:20px; font-size:11px; font-weight:bold; white-space:nowrap; }
+.g { background:#dcf5e7; color:#1a6632; }
+.a { background:#fff5dc; color:#856404; }
 .r { background:#fde8e8; color:#9b1c1c; }
 
-/* TABS */
 .tab-row { display:flex; gap:8px; margin-bottom:20px; flex-wrap:wrap; }
-.pill { padding:8px 22px; border-radius:20px; border:1.5px solid rgba(26,43,94,.2); background:none; font-family:'Georgia',serif; font-size:13px; color:#1a2b5e; opacity:.5; cursor:pointer; transition:all .2s; }
-.pill.active { background:#1a2b5e; color:#f0ece4; opacity:1; border-color:#1a2b5e; }
-.pill:hover:not(.active) { opacity:.75; }
+.pill { padding:8px 22px; border-radius:24px; border:1.5px solid rgba(26,43,94,.18); background:none; font-family:'Georgia',serif; font-size:13px; color:#1a2b5e; opacity:.5; cursor:pointer; transition:all .2s; }
+.pill.active { background:#1a2b5e; color:#f0ece4; opacity:1; border-color:#1a2b5e; box-shadow:0 4px 14px rgba(26,43,94,.25); }
+.pill:hover:not(.active) { opacity:.75; background:rgba(26,43,94,.04); }
 .pblock { display:none; }
 .pblock.active { display:block; }
 
-.mpill { padding:6px 16px; border-radius:20px; border:1.5px solid rgba(201,123,42,.4); background:none; font-family:'Georgia',serif; font-size:12px; color:#1a2b5e; opacity:.5; cursor:pointer; transition:all .2s; }
-.mpill.active { background:#c97b2a; color:#fff; opacity:1; border-color:#c97b2a; }
+.mpill { padding:6px 16px; border-radius:20px; border:1.5px solid rgba(201,123,42,.35); background:none; font-family:'Georgia',serif; font-size:12px; color:#1a2b5e; opacity:.5; cursor:pointer; transition:all .2s; }
+.mpill.active { background:#c97b2a; color:#fff; opacity:1; border-color:#c97b2a; box-shadow:0 3px 10px rgba(201,123,42,.3); }
 .mpill:hover:not(.active) { opacity:.75; }
 
 /* KPI */
-.krow { display:grid; gap:12px; margin-bottom:20px; }
+.krow { display:grid; gap:14px; margin-bottom:20px; }
+.k3 { grid-template-columns:repeat(3,1fr); }
 .k4 { grid-template-columns:repeat(4,1fr); }
-.kcard { background:white; border-radius:8px; padding:20px 18px; border-top:3px solid rgba(26,43,94,.2); }
-.kcard.up   { border-top-color:#2a7d4f; }
-.kcard.warn { border-top-color:#c97b2a; }
-.kcard.down { border-top-color:#c0392b; }
-.kcard .kval { font-size:26px; font-weight:bold; line-height:1; margin-bottom:4px; }
-.kcard .klbl { font-size:11px; text-transform:uppercase; letter-spacing:1px; opacity:.45; }
-.kcard .kchg { font-size:12px; margin-top:6px; }
+.kcard { background:white; border-radius:14px; padding:20px 18px 16px; border-left:4px solid rgba(26,43,94,.18); box-shadow:0 2px 16px rgba(26,43,94,.07); transition:transform .15s; }
+.kcard:hover { transform:translateY(-2px); }
+.kcard.up   { border-left-color:#2a7d4f; }
+.kcard.warn { border-left-color:#c97b2a; }
+.kcard.down { border-left-color:#c0392b; }
+.kcard .kval { font-size:26px; font-weight:bold; line-height:1; margin-bottom:5px; }
+.kcard .klbl { font-size:10px; text-transform:uppercase; letter-spacing:1.5px; opacity:.42; }
+.kcard .kchg { font-size:12px; margin-top:7px; line-height:1.4; }
 .chg-up   { color:#2a7d4f; }
 .chg-down { color:#c0392b; }
 .chg-warn { color:#c97b2a; }
 .chg-neu  { color:#888; }
 
-/* CHARTS — fixed height containers stop the jumping */
-.chart-row { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px; }
-.chart-box { background:white; border-radius:8px; padding:20px 18px 16px; height:220px; display:flex; flex-direction:column; }
-.chart-box .ctitle { font-size:10px; letter-spacing:3px; text-transform:uppercase; opacity:.4; margin-bottom:10px; flex-shrink:0; }
-.chart-box .chart-wrap { flex:1; position:relative; min-height:0; }
-.chart-box canvas { position:absolute; inset:0; }
+/* GOAL DONUTS */
+.goal-row { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:20px; }
+.goal-card { background:white; border-radius:14px; padding:20px 14px 16px; box-shadow:0 2px 16px rgba(26,43,94,.07); display:flex; flex-direction:column; align-items:center; text-align:center; }
+.goal-card .gc-wrap { position:relative; width:100px; height:100px; margin-bottom:14px; }
+.goal-card .gc-wrap canvas { position:absolute; inset:0; }
+.goal-card .gc-pct { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:bold; }
+.goal-card .gc-label { font-size:10px; text-transform:uppercase; letter-spacing:1.5px; opacity:.42; margin-bottom:4px; }
+.goal-card .gc-val { font-size:14px; font-weight:bold; }
+.goal-card .gc-target { font-size:11px; opacity:.4; margin-top:3px; }
 
-/* TOP CONTENIDOS */
+/* CHARTS */
+.chart-row  { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px; }
+.chart-box  { background:white; border-radius:14px; padding:20px 18px 14px; height:220px; display:flex; flex-direction:column; box-shadow:0 2px 16px rgba(26,43,94,.07); }
+.chart-box .ctitle { font-size:10px; letter-spacing:3px; text-transform:uppercase; opacity:.38; margin-bottom:12px; flex-shrink:0; }
+.chart-wrap { flex:1; position:relative; min-height:0; }
+.chart-wrap canvas { position:absolute; inset:0; }
+
+/* TOP CONTENT */
 .top-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:20px; }
-.top-card { background:white; border-radius:8px; overflow:hidden; }
-.top-card .tc-badge { padding:8px 14px; font-size:10px; letter-spacing:2px; text-transform:uppercase; font-weight:bold; }
-.tc-reel  { background:#1a2b5e; color:#f0ece4; }
-.tc-post  { background:#2a7d4f; color:#f0ece4; }
-.tc-tiktok{ background:#111; color:#f0ece4; }
-.top-card .tc-body { padding:16px 18px; }
-.top-card .tc-desc { font-size:14px; line-height:1.5; margin-bottom:12px; min-height:44px; }
-.top-card .tc-stats { display:flex; gap:16px; }
-.top-card .tc-stat .tsv { font-size:20px; font-weight:bold; }
-.top-card .tc-stat .tsl { font-size:10px; text-transform:uppercase; letter-spacing:1px; opacity:.45; }
+.top-card { background:white; border-radius:14px; overflow:hidden; box-shadow:0 2px 16px rgba(26,43,94,.07); transition:transform .15s; }
+.top-card:hover { transform:translateY(-2px); }
+.top-card .tc-badge { padding:10px 14px; font-size:10px; letter-spacing:2px; text-transform:uppercase; font-weight:bold; display:flex; align-items:center; justify-content:space-between; }
+.tc-reel   { background:linear-gradient(135deg,#1a2b5e,#2c4494); color:#f0ece4; }
+.tc-tiktok { background:linear-gradient(135deg,#111,#2a2a2a); color:#f0ece4; }
+.top-card .tc-body { padding:16px 16px 14px; }
+.top-card .tc-desc { font-size:13px; line-height:1.55; margin-bottom:12px; min-height:40px; }
+.top-card .tc-stats { display:flex; gap:14px; }
+.tc-stat .tsv { font-size:20px; font-weight:bold; }
+.tc-stat .tsl { font-size:10px; text-transform:uppercase; letter-spacing:1px; opacity:.42; }
 
 /* TRIMESTRAL */
 .wins-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:6px; }
-.win-card  { background:#1a2b5e; color:#f0ece4; border-radius:8px; padding:26px 22px; }
-.win-card .wnum   { font-size:38px; font-weight:bold; line-height:1; }
-.win-card .wlabel { font-size:12px; opacity:.7; margin-top:8px; line-height:1.5; }
-.win-card .wsub   { font-size:11px; opacity:.5; margin-top:4px; }
-
-.q-plat { background:white; border-radius:8px; padding:24px; margin-bottom:12px; }
-.q-plat h3 { font-size:10px; letter-spacing:3px; text-transform:uppercase; opacity:.4; margin-bottom:16px; }
-.q-plat-body { display:grid; grid-template-columns:1fr 1fr; gap:24px; }
-.q-col h4   { font-size:12px; letter-spacing:1px; text-transform:uppercase; opacity:.4; margin-bottom:10px; }
-.q-stat     { margin-bottom:8px; font-size:13px; line-height:1.5; }
+.win-card  { background:linear-gradient(135deg,#1a2b5e 0%,#243580 100%); color:#f0ece4; border-radius:14px; padding:28px 24px; box-shadow:0 4px 20px rgba(26,43,94,.2); }
+.win-card .wnum   { font-size:40px; font-weight:bold; line-height:1; color:#c97b2a; }
+.win-card .wlabel { font-size:13px; opacity:.85; margin-top:10px; line-height:1.5; }
+.win-card .wsub   { font-size:11px; opacity:.5; margin-top:5px; }
+.q-plat { background:white; border-radius:14px; padding:26px; margin-bottom:14px; box-shadow:0 2px 16px rgba(26,43,94,.07); }
+.q-plat h3 { font-size:10px; letter-spacing:3px; text-transform:uppercase; opacity:.38; margin-bottom:18px; }
+.q-plat-body { display:grid; grid-template-columns:1fr 1fr; gap:28px; }
+.q-col h4   { font-size:11px; letter-spacing:1.5px; text-transform:uppercase; opacity:.4; margin-bottom:12px; }
+.q-stat     { margin-bottom:9px; font-size:13px; line-height:1.55; }
 .q-stat strong { font-size:15px; }
+.trim-charts { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:28px; }
+.trim-cbox { background:white; border-radius:14px; padding:20px; height:210px; display:flex; flex-direction:column; box-shadow:0 2px 16px rgba(26,43,94,.07); }
+.trim-cbox .ctitle { font-size:10px; letter-spacing:3px; text-transform:uppercase; opacity:.38; margin-bottom:12px; flex-shrink:0; }
 
-/* TRIM mini charts */
-.trim-charts { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:28px; }
-.trim-cbox { background:white; border-radius:8px; padding:18px; height:200px; display:flex; flex-direction:column; }
-.trim-cbox .ctitle { font-size:10px; letter-spacing:3px; text-transform:uppercase; opacity:.4; margin-bottom:10px; flex-shrink:0; }
-.trim-cbox .chart-wrap { flex:1; position:relative; min-height:0; }
-.trim-cbox canvas { position:absolute; inset:0; }
+/* PLAN MAYO */
+.plan-intro { background:#1a2b5e; color:#f0ece4; border-radius:8px; padding:20px 24px; margin-bottom:20px; display:flex; align-items:center; justify-content:space-between; }
+.plan-intro .pi-title { font-size:16px; }
+.plan-intro .pi-sub { font-size:12px; opacity:.6; }
+.plan-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px; }
+.plan-card { background:white; border-radius:8px; overflow:hidden; }
+.plan-card-head { padding:16px 20px; display:flex; align-items:center; gap:12px; border-bottom:1px solid rgba(26,43,94,.07); }
+.plan-card-head .pc-icon { font-size:18px; }
+.plan-card-head .pc-plat { font-size:11px; letter-spacing:3px; text-transform:uppercase; flex:1; opacity:.5; }
+.plan-badge { padding:3px 10px; border-radius:12px; font-size:10px; font-weight:bold; letter-spacing:.5px; }
+.pb-high { background:#fde8e8; color:#9b1c1c; }
+.pb-med  { background:#fff3cd; color:#856404; }
+.pb-low  { background:#d4edda; color:#1a6632; }
+.plan-body { padding:18px 20px; }
+.plan-kpis { display:flex; gap:16px; margin-bottom:14px; }
+.plan-kpi  { flex:1; background:#f0ece4; border-radius:6px; padding:10px 12px; }
+.plan-kpi .pk-val { font-size:18px; font-weight:bold; line-height:1; }
+.plan-kpi .pk-lbl { font-size:10px; text-transform:uppercase; letter-spacing:1px; opacity:.45; margin-top:3px; }
+.plan-action { display:flex; gap:10px; align-items:flex-start; padding:8px 0; border-bottom:1px solid rgba(26,43,94,.06); font-size:13px; line-height:1.5; }
+.plan-action:last-child { border-bottom:none; }
+.plan-action .pa-dot { width:6px; height:6px; border-radius:50%; background:#c97b2a; flex-shrink:0; margin-top:7px; }
+.plan-alert { background:rgba(201,123,42,.1); border-left:3px solid #c97b2a; border-radius:0 6px 6px 0; padding:10px 14px; font-size:13px; margin-bottom:14px; line-height:1.5; }
+.plan-full { grid-column:1/-1; }
 
-footer { text-align:center; margin-top:60px; padding:20px; font-size:11px; opacity:.3; letter-spacing:2px; text-transform:uppercase; }
+/* PLAN MAYO */
+.plan-intro { background:linear-gradient(135deg,#1a2b5e,#243580); color:#f0ece4; border-radius:14px; padding:22px 28px; margin-bottom:20px; display:flex; align-items:center; justify-content:space-between; box-shadow:0 4px 20px rgba(26,43,94,.2); }
+.plan-intro .pi-title { font-size:17px; }
+.plan-intro .pi-sub { font-size:12px; opacity:.6; margin-top:4px; }
+.plan-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px; }
+.plan-card { background:white; border-radius:14px; overflow:hidden; box-shadow:0 2px 16px rgba(26,43,94,.07); }
+.plan-card-head { padding:16px 20px; display:flex; align-items:center; gap:12px; border-bottom:1px solid rgba(26,43,94,.07); }
+.plan-card-head .pc-icon { font-size:20px; }
+.plan-card-head .pc-plat { font-size:11px; letter-spacing:3px; text-transform:uppercase; flex:1; opacity:.5; }
+.plan-badge { padding:4px 12px; border-radius:20px; font-size:10px; font-weight:bold; letter-spacing:.5px; }
+.pb-high { background:#fde8e8; color:#9b1c1c; }
+.pb-med  { background:#fff3cd; color:#856404; }
+.pb-low  { background:#d4edda; color:#1a6632; }
+.plan-body { padding:20px 20px; }
+.plan-kpis { display:flex; gap:12px; margin-bottom:16px; }
+.plan-kpi  { flex:1; background:#edf0f8; border-radius:10px; padding:12px 12px; }
+.plan-kpi .pk-val { font-size:20px; font-weight:bold; line-height:1; }
+.plan-kpi .pk-lbl { font-size:10px; text-transform:uppercase; letter-spacing:1px; opacity:.42; margin-top:4px; }
+.plan-action { display:flex; gap:10px; align-items:flex-start; padding:9px 0; border-bottom:1px solid rgba(26,43,94,.05); font-size:13px; line-height:1.55; }
+.plan-action:last-child { border-bottom:none; }
+.plan-action .pa-dot { width:7px; height:7px; border-radius:50%; background:#c97b2a; flex-shrink:0; margin-top:6px; }
+.plan-alert { background:rgba(201,123,42,.09); border-left:3px solid #c97b2a; border-radius:0 8px 8px 0; padding:11px 14px; font-size:13px; margin-bottom:14px; line-height:1.55; }
+.plan-full { grid-column:1/-1; }
+
+/* FIDELIZACIÓN */
+.fidel-header { background:linear-gradient(135deg,#1a2b5e,#243580); color:#f0ece4; border-radius:14px; padding:22px 28px; margin-bottom:16px; display:flex; align-items:center; justify-content:space-between; box-shadow:0 4px 20px rgba(26,43,94,.18); }
+.fidel-header .fh-brand { font-size:11px; letter-spacing:3px; text-transform:uppercase; opacity:.6; }
+.fidel-header .fh-period { font-size:13px; opacity:.7; }
+.fidel-section { background:white; border-radius:14px; padding:24px; margin-bottom:14px; box-shadow:0 2px 16px rgba(26,43,94,.07); }
+.fidel-section h3 { font-size:10px; letter-spacing:3px; text-transform:uppercase; opacity:.38; margin-bottom:18px; }
+.demo-row { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+.demo-bar { margin-bottom:10px; }
+.demo-bar .db-label { display:flex; justify-content:space-between; font-size:13px; margin-bottom:5px; }
+.demo-bar .db-track { background:rgba(26,43,94,.08); border-radius:6px; height:9px; }
+.demo-bar .db-fill  { height:9px; border-radius:6px; background:#1a2b5e; }
+.demo-bar .db-fill.green { background:#2a7d4f; }
+.demo-bar .db-fill.amber { background:#c97b2a; }
+.wifi-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
+.wifi-card { background:#edf0f8; border-radius:12px; padding:18px 14px; text-align:center; }
+.wifi-card .wc-val { font-size:30px; font-weight:bold; }
+.wifi-card .wc-lbl { font-size:10px; text-transform:uppercase; letter-spacing:1px; opacity:.42; margin-top:5px; }
+.cupon-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
+.cupon-card { background:#edf0f8; border-radius:12px; padding:18px 14px; text-align:center; }
+.cupon-card .cc-val { font-size:30px; font-weight:bold; }
+.cupon-card .cc-lbl { font-size:10px; text-transform:uppercase; letter-spacing:1px; opacity:.42; margin-top:5px; }
+
+footer { text-align:center; margin-top:60px; padding:24px; font-size:11px; opacity:.28; letter-spacing:2px; text-transform:uppercase; }
 </style>
 </head>
 <body>
 
 <div class="top-bar">
-  <div class="brand">· Libertario Coffee Co. & Roasters ·</div>
-  <div class="title">Dashboard de Métricas — Costa Rica 2026</div>
-  <div class="brand">Enero – Marzo</div>
+  <div>
+    <div class="brand">☕ Libertario Coffee Co. & Roasters · Costa Rica</div>
+    <div class="title" style="margin-top:4px;">Dashboard de Marketing 2026</div>
+  </div>
+  <div class="date-badge">Enero – Abril · Q1–Q2</div>
 </div>
 
 <nav class="nav">
-  <button class="nav-btn active" onclick="showView('anual',this)">Objetivos Anuales</button>
-  <button class="nav-btn" onclick="showView('trim',this)">Trimestral</button>
+  <button class="nav-btn active" onclick="showView('anual',this)">KPIs Anual</button>
   <button class="nav-btn" onclick="showView('mensual',this)">Mensual</button>
+  <button class="nav-btn" onclick="showView('fidel',this)">Fidelización</button>
+  <button class="nav-btn" onclick="showView('trim',this)">Trimestral Q1</button>
+  <button class="nav-btn" onclick="showView('conclusiones',this)">Conclusiones</button>
 </nav>
 
 <div class="main">
 
 <!-- ═══════ OBJETIVOS ANUALES ═══════ -->
 <div id="view-anual" class="view active">
-  <div style="font-size:12px;opacity:.5;margin-bottom:22px;">Ritmo esperado al cerrar Q1: 25% de cada meta anual. Más del 25% = adelantado.</div>
+  <div style="font-size:12px;opacity:.5;margin-bottom:6px;">Ritmo esperado al cerrar Q2: 50% de cada meta anual. Más = adelantado. Las metas alcanzadas se recalibran para el siguiente trimestre.</div>
   <div class="tab-row">
     <button class="pill active" onclick="showTab('ap','ig',this)">Instagram</button>
     <button class="pill" onclick="showTab('ap','pauta',this)">Pauta Meta</button>
     <button class="pill" onclick="showTab('ap','tt',this)">TikTok</button>
   </div>
   <div id="ap-ig" class="pblock active">
-    <table class="tbl">
-      <thead><tr><th>Métrica</th><th>Meta anual 2026</th><th>Logrado a hoy</th><th>Avance</th></tr></thead>
+    <div style="font-size:12px;opacity:.5;margin-bottom:16px;">Acumulado a Abril 2026 · 4/12 meses completados (33%)</div>
+
+    <!-- Visual Goal Cards -->
+    <div class="goal-row">
+      <div class="goal-card">
+        <div class="gc-wrap"><canvas id="goal-seg"></canvas><div class="gc-pct" style="color:#2a7d4f;">99%</div></div>
+        <div class="gc-label">Seguidores</div>
+        <div class="gc-val">11.934</div>
+        <div class="gc-target">Meta junio: 12.000 · ¡solo 66!</div>
+      </div>
+      <div class="goal-card">
+        <div class="gc-wrap"><canvas id="goal-int"></canvas><div class="gc-pct" style="color:#2a7d4f;">✓</div></div>
+        <div class="gc-label">Interacciones</div>
+        <div class="gc-val">14.729</div>
+        <div class="gc-target">Meta: 10.300 · superada (+143%)</div>
+      </div>
+      <div class="goal-card">
+        <div class="gc-wrap"><canvas id="goal-reach"></canvas><div class="gc-pct" style="color:#c97b2a;">60%</div></div>
+        <div class="gc-label">Reach acumulado</div>
+        <div class="gc-val">420.181</div>
+        <div class="gc-target">Meta anual: 700.000</div>
+      </div>
+      <div class="goal-card">
+        <div class="gc-wrap"><canvas id="goal-views"></canvas><div class="gc-pct" style="color:#c0392b;">43%</div></div>
+        <div class="gc-label">Views acumuladas</div>
+        <div class="gc-val">1.144.325</div>
+        <div class="gc-target">Meta anual: 2,64M</div>
+      </div>
+    </div>
+
+    <table class="tbl" style="margin-bottom:16px;">
+      <thead><tr><th>Métrica</th><th>Meta anual 2026</th><th>Logrado (Ene–May)</th><th>Avance</th><th>Meta junio / cierre Q2</th></tr></thead>
       <tbody>
-        <tr><td>Seguidores (fin de año)</td><td>11.000</td><td>10.462</td><td><span class="tag g">95% — muy adelantado</span></td></tr>
-        <tr><td>Interacciones totales</td><td>10.300</td><td>8.357</td><td><span class="tag g">81% — muy adelantado</span></td></tr>
-        <tr><td>Reach acumulado</td><td>700.000</td><td>210.182</td><td><span class="tag g">30% — en ritmo</span></td></tr>
-        <tr><td>Views acumuladas</td><td>2.640.000</td><td>534.972</td><td><span class="tag a">20% — rezagado</span></td></tr>
-        <tr><td>Engagement Rate prom.</td><td>1,20%</td><td>1,66%</td><td><span class="tag g">Superado</span></td></tr>
+        <tr><td>Seguidores (fin de año)</td><td>11.000 <em style="opacity:.4;font-size:11px;">— alcanzada</em></td><td><strong>11.934</strong></td><td><span class="tag g">✓ 99,5% META JUNIO 12K</span></td><td>12.000 meta cierre junio · a solo 66 seguidores · ¡casi!</td></tr>
+        <tr><td>Interacciones totales</td><td>10.300</td><td>~14.729</td><td><span class="tag g">+143% — muy superado</span></td><td>Meta jun: 4.000+/mes · superar 18K acumulado</td></tr>
+        <tr><td>Reach acumulado</td><td>700.000</td><td>~420.181</td><td><span class="tag g">60% · sobre ritmo</span></td><td>+120K jun · meta semestral: 540K</td></tr>
+        <tr><td>Views acumuladas</td><td>2.640.000</td><td>~1.144.325</td><td><span class="tag a">43% · rezagado</span></td><td>+320K/mes · meta sem: 1,46M</td></tr>
+        <tr><td>Engagement Rate prom.</td><td>1,20%</td><td>~1,55%</td><td><span class="tag g">Sobre meta</span></td><td>Mantener ≥1,20% — junio objetivo: 4.000+ interacciones</td></tr>
       </tbody>
     </table>
+    <div style="background:rgba(42,125,79,0.08);border-radius:8px;padding:14px 18px;font-size:13px;border-left:3px solid #2a7d4f;">
+      <strong>Meta de seguidores recalibrada:</strong> La meta anual de 11.000 se alcanzó en abril con 4 meses de anticipación. A +400/mes la cuenta llega a ~11.500 en mayo naturalmente — la nueva meta para el cierre de junio Q2 es <strong>12.000 seguidores</strong> (+455/mes promedio), un objetivo ambicioso que mantiene el momentum.
+    </div>
   </div>
   <div id="ap-pauta" class="pblock">
-    <div style="font-size:12px;opacity:.5;margin-bottom:14px;">Las metas de pauta son mensuales. Se compara el promedio mensual del Q1 vs la meta.</div>
-    <table class="tbl">
-      <thead><tr><th>Métrica</th><th>Meta mensual 2026</th><th>Logrado Q1 (3 meses)</th><th>Estado</th></tr></thead>
+    <div style="font-size:12px;opacity:.5;margin-bottom:16px;">Las metas de pauta son mensuales. Datos al cierre de abril. Metas Q2 ajustadas por el cambio de estrategia de alcance → conversión.</div>
+
+    <!-- Pauta goal donuts — abril vs meta mensual -->
+    <div class="goal-row">
+      <div class="goal-card">
+        <div class="gc-wrap"><canvas id="goal-p-alc"></canvas><div class="gc-pct" style="color:#2a7d4f;">✓</div></div>
+        <div class="gc-label">Alcance · Abril</div>
+        <div class="gc-val">387.982</div>
+        <div class="gc-target">Meta: 130K–160K · superado</div>
+      </div>
+      <div class="goal-card">
+        <div class="gc-wrap"><canvas id="goal-p-clic"></canvas><div class="gc-pct" style="color:#c97b2a;">59%</div></div>
+        <div class="gc-label">Clics · Abril</div>
+        <div class="gc-val">1.920</div>
+        <div class="gc-target">Meta: 3.000–3.500</div>
+      </div>
+      <div class="goal-card">
+        <div class="gc-wrap"><canvas id="goal-p-ctr"></canvas><div class="gc-pct" style="color:#c0392b;">18%</div></div>
+        <div class="gc-label">CTR · Abril</div>
+        <div class="gc-val">0,37%</div>
+        <div class="gc-target">Meta: 1,8%–2,3%</div>
+      </div>
+      <div class="goal-card">
+        <div class="gc-wrap"><canvas id="goal-p-cpc"></canvas><div class="gc-pct" style="color:#c0392b;">46%</div></div>
+        <div class="gc-label">Eficiencia CPC</div>
+        <div class="gc-val">$594 COP</div>
+        <div class="gc-target">Meta: $250–300 · optimizar</div>
+      </div>
+    </div>
+
+    <table class="tbl" style="margin-bottom:16px;">
+      <thead><tr><th>Métrica</th><th>Meta original 2026</th><th>Abril real</th><th>Estado</th><th>Meta Q2 ajustada</th></tr></thead>
       <tbody>
-        <tr><td>Inversión (COP)</td><td>180K–220K/mes</td><td>$1.714.243 total · 571K prom.</td><td><span class="tag r">Sobre rango — muy variable</span></td></tr>
-        <tr><td>Clics</td><td>3.000–3.500/mes</td><td>6.216 total · 2.072 prom.</td><td><span class="tag a">Bajo rango en promedio</span></td></tr>
-        <tr><td>CTR promedio</td><td>1,8%–2,3%</td><td>1,62% prom. (marzo: 2,20%)</td><td><span class="tag a">Bajo en promedio; mejorando</span></td></tr>
-        <tr><td>CPC (COP)</td><td>250–300</td><td>340 (marzo)</td><td><span class="tag r">Sobre rango — a optimizar</span></td></tr>
-        <tr><td>Campañas activas</td><td>8–10</td><td>8–10</td><td><span class="tag g">En meta</span></td></tr>
+        <tr><td>Inversión (COP)</td><td>180K–220K/mes</td><td>$1.139.736</td><td><span class="tag r">Muy sobre rango</span></td><td>Comprimir a $200K–250K/mes</td></tr>
+        <tr><td>Alcance</td><td>130K–160K/mes</td><td>387.982</td><td><span class="tag g">Muy sobre meta</span></td><td>200K/mes con mejor segmentación</td></tr>
+        <tr><td>Clics</td><td>3.000–3.500/mes</td><td>1.920</td><td><span class="tag r">Bajo rango</span></td><td>Recuperar 2.500+ cambiando a objetivo engagement</td></tr>
+        <tr><td>CTR</td><td>1,8%–2,3%</td><td>0,37%</td><td><span class="tag r">Bajo — estrategia diferente</span></td><td>Meta Q2: ≥1,5% con campañas de engagement</td></tr>
+        <tr><td>CPC (COP)</td><td>250–300</td><td>$594</td><td><span class="tag r">Sobre rango — optimizar</span></td><td>Bajar a $350–$420 con mejor segmentación</td></tr>
+        <tr><td>Campañas activas</td><td>8–10</td><td>11</td><td><span class="tag g">En meta</span></td><td>Mantener 8–10 · consolidar las de mejor CTR</td></tr>
       </tbody>
     </table>
   </div>
   <div id="ap-tt" class="pblock">
-    <table class="tbl">
-      <thead><tr><th>Métrica</th><th>Meta anual 2026</th><th>Logrado a hoy</th><th>Avance</th></tr></thead>
+    <div style="font-size:12px;opacity:.5;margin-bottom:16px;">Acumulado a Abril 2026 · incluye orgánico Q1 + orgánico y ads de abril.</div>
+
+    <!-- TikTok goal donuts — acumulado vs meta anual -->
+    <div class="goal-row">
+      <div class="goal-card">
+        <div class="gc-wrap"><canvas id="goal-tt-views"></canvas><div class="gc-pct" style="color:#c97b2a;">46%</div></div>
+        <div class="gc-label">Views orgánico</div>
+        <div class="gc-val">150.811</div>
+        <div class="gc-target">Meta anual: 240K–420K</div>
+      </div>
+      <div class="goal-card">
+        <div class="gc-wrap"><canvas id="goal-tt-likes"></canvas><div class="gc-pct" style="color:#c97b2a;">37%</div></div>
+        <div class="gc-label">Likes acumulados</div>
+        <div class="gc-val">3.542</div>
+        <div class="gc-target">Meta anual: 7.200–12.000</div>
+      </div>
+      <div class="goal-card">
+        <div class="gc-wrap"><canvas id="goal-tt-seg"></canvas><div class="gc-pct" style="color:#2a7d4f;">61%</div></div>
+        <div class="gc-label">Seguidores nuevos</div>
+        <div class="gc-val">837</div>
+        <div class="gc-target">Meta anual: 960–1.800</div>
+      </div>
+      <div class="goal-card">
+        <div class="gc-wrap"><canvas id="goal-tt-shr"></canvas><div class="gc-pct" style="color:#c0392b;">21%</div></div>
+        <div class="gc-label">Shares acumulados</div>
+        <div class="gc-val">51</div>
+        <div class="gc-target">Meta anual: 180–300</div>
+      </div>
+    </div>
+
+    <table class="tbl" style="margin-bottom:16px;">
+      <thead><tr><th>Métrica</th><th>Meta anual 2026</th><th>Logrado (Ene–Abr)</th><th>Avance</th><th>Nueva meta Q2 (May–Jun)</th></tr></thead>
       <tbody>
-        <tr><td>Views</td><td>240.000–420.000</td><td>93.177</td><td><span class="tag g">31–39%</span></td></tr>
-        <tr><td>Likes</td><td>7.200–12.000</td><td>3.018</td><td><span class="tag g">25–42%</span></td></tr>
-        <tr><td>Seguidores nuevos</td><td>960–1.800</td><td>555</td><td><span class="tag g">31–58%</span></td></tr>
-        <tr><td>Shares</td><td>180–300</td><td>43</td><td><span class="tag a">14–24% — rezagado</span></td></tr>
-        <tr><td>Comments</td><td>96–180</td><td>23</td><td><span class="tag a">13–24% — rezagado</span></td></tr>
+        <tr><td>Views (orgánico)</td><td>240K–420K</td><td>~150.811</td><td><span class="tag a">36–63% · irregular</span></td><td>+70K/mes orgánico · meta sem: 290K–350K</td></tr>
+        <tr><td>Likes</td><td>7.200–12.000</td><td>~3.542</td><td><span class="tag a">29–49% · rezagado</span></td><td>+600/mes · aprovechar consistencia de posts</td></tr>
+        <tr><td>Seguidores nuevos</td><td>960–1.800</td><td>~837</td><td><span class="tag g">46–87% · en ritmo</span></td><td>+300/mes · meta semestral: ~1.450</td></tr>
+        <tr><td>Shares</td><td>180–300</td><td>~51</td><td><span class="tag r">17–28% — rezagado</span></td><td>+20/mes con contenido de mayor viralidad</td></tr>
       </tbody>
     </table>
+    <div style="background:rgba(201,123,42,0.08);border-radius:8px;padding:14px 18px;font-size:13px;border-left:3px solid #c97b2a;">
+      <strong>TikTok Ads incluidos en abril:</strong> 48.656 views pagadas adicionales a las 57.634 orgánicas. Las metas anuales fueron definidas para orgánico — las ads son un multiplicador adicional no considerado en la meta original.
+    </div>
   </div>
 </div>
 
 <!-- ═══════ TRIMESTRAL ═══════ -->
 <div id="view-trim" class="view">
-  <div class="slabel">Wins del trimestre</div>
+  <div style="font-size:12px;opacity:.5;margin-bottom:18px;">Resumen de Q1 cerrado · Enero – Marzo 2026 · 3 meses completos</div>
+  <div class="slabel">Wins del Q1</div>
   <div class="wins-grid">
-    <div class="win-card">
-      <div class="wnum">10.462</div>
-      <div class="wlabel">Seguidores en Instagram</div>
-      <div class="wsub">95% de la meta anual en solo 3 meses</div>
-    </div>
-    <div class="win-card">
-      <div class="wnum">8.357</div>
-      <div class="wlabel">Interacciones acumuladas en Instagram</div>
-      <div class="wsub">81% de la meta anual — muy adelantado</div>
-    </div>
-    <div class="win-card">
-      <div class="wnum">+700%</div>
-      <div class="wlabel">Seguidores nuevos en TikTok (marzo)</div>
-      <div class="wsub">+598% en views · canal con tracción real</div>
-    </div>
+    <div class="win-card"><div class="wnum">10.462</div><div class="wlabel">Seguidores al cierre Q1 (Marzo)</div><div class="wsub">+1.384 nuevos en Q1 · ritmo de +461/mes</div></div>
+    <div class="win-card"><div class="wnum">8.357</div><div class="wlabel">Interacciones acumuladas Q1</div><div class="wsub">81% de la meta anual en solo 3 meses</div></div>
+    <div class="win-card"><div class="wnum">+700%</div><div class="wlabel">Seguidores nuevos en TikTok (Marzo)</div><div class="wsub">+598% en views · canal con tracción real</div></div>
   </div>
-
-  <div class="slabel" style="margin-top:28px;">Evolución visual Q1</div>
+  <div class="slabel" style="margin-top:28px;">Evolución visual · Enero – Marzo 2026</div>
   <div class="trim-charts">
-    <div class="trim-cbox">
-      <div class="ctitle">Instagram — Views mensuales</div>
-      <div class="chart-wrap"><canvas id="trim-ig-views"></canvas></div>
-    </div>
-    <div class="trim-cbox">
-      <div class="ctitle">Instagram — Interacciones mensuales</div>
-      <div class="chart-wrap"><canvas id="trim-ig-int"></canvas></div>
-    </div>
-    <div class="trim-cbox">
-      <div class="ctitle">TikTok — Views mensuales</div>
-      <div class="chart-wrap"><canvas id="trim-tt-views"></canvas></div>
-    </div>
-    <div class="trim-cbox">
-      <div class="ctitle">Pauta Meta — Clics mensuales</div>
-      <div class="chart-wrap"><canvas id="trim-p-clics"></canvas></div>
-    </div>
+    <div class="trim-cbox"><div class="ctitle">Instagram — Views · Ene–Mar</div><div class="chart-wrap"><canvas id="trim-ig-views"></canvas></div></div>
+    <div class="trim-cbox"><div class="ctitle">Instagram — Interacciones · Ene–Mar</div><div class="chart-wrap"><canvas id="trim-ig-int"></canvas></div></div>
+    <div class="trim-cbox"><div class="ctitle">TikTok — Views · Ene–Mar</div><div class="chart-wrap"><canvas id="trim-tt-views"></canvas></div></div>
+    <div class="trim-cbox"><div class="ctitle">Pauta Meta — Clics · Ene–Mar</div><div class="chart-wrap"><canvas id="trim-p-clics"></canvas></div></div>
   </div>
-
-  <div class="slabel">Análisis por plataforma + proyección próximo trimestre</div>
+  <div class="slabel">Análisis por plataforma · cierre Q1</div>
   <div class="q-plat">
     <h3>Instagram</h3>
     <div class="q-plat-body">
@@ -222,11 +373,10 @@ footer { text-align:center; margin-top:60px; padding:20px; font-size:11px; opaci
         <div class="q-stat">Interacciones se triplicaron: 1.347 → 2.710 → <strong>4.300</strong>. El contenido conecta.</div>
         <div class="q-stat">Seguidores ganaron ritmo sostenido: +393 en feb, <strong>+991 en marzo</strong>.</div>
         <div class="q-stat" style="color:#c97b2a;">Reach lleva 3 meses cayendo: 73K → 71K → 65K. El alcance orgánico se contrae.</div>
-        <div class="q-stat" style="color:#c97b2a;">El 63,5% de los views viene de pauta — dependencia creciente.</div>
       </div>
       <div class="q-col">
-        <h4>Foco para el próximo trimestre</h4>
-        <div class="q-stat">Recuperar reach orgánico — más Reels con buen hook y mínimo 4 posts/mes en feed.</div>
+        <h4>Señales clave para Q2</h4>
+        <div class="q-stat">Recuperar reach orgánico — más Reels con buen hook, mínimo 4 posts/mes en feed.</div>
         <div class="q-stat">Mantener el ritmo de interacciones: meta Q2 de 3.500–4.000/mes.</div>
         <div class="q-stat">Views objetivo próximo trimestre: 230K–250K/mes para estar en ritmo anual.</div>
         <div class="q-stat">Aprovechar el momentum de seguidores — llegar a 11.000 (meta anual) antes de cerrar Q2.</div>
@@ -244,7 +394,7 @@ footer { text-align:center; margin-top:60px; padding:20px; font-size:11px; opaci
         <div class="q-stat" style="color:#c97b2a;">Pauta gestionada desde "Promocionar" en app, sin estrategia en Meta Ads Manager.</div>
       </div>
       <div class="q-col">
-        <h4>Foco para el próximo trimestre</h4>
+        <h4>Señales clave para Q2</h4>
         <div class="q-stat">Migrar a Meta Ads Manager — control real de segmentación y presupuesto.</div>
         <div class="q-stat">Objetivo de CPC: bajar a 250–300 COP.</div>
         <div class="q-stat">Estabilizar inversión mensual en 180K–220K COP.</div>
@@ -259,11 +409,11 @@ footer { text-align:center; margin-top:60px; padding:20px; font-size:11px; opaci
         <h4>Qué pasó este trimestre</h4>
         <div class="q-stat">Marzo despegó: <strong>65.243 views</strong> (+598% vs feb) y <strong>416 nuevos seguidores</strong> (+700%).</div>
         <div class="q-stat">Likes crecieron fuerte en marzo: <strong>1.905</strong> (+257% vs feb).</div>
-        <div class="q-stat" style="color:#c97b2a;">Enero y febrero fueron débiles (18K y 9K views) — el pico de marzo fue puntual, no una tendencia aún.</div>
+        <div class="q-stat" style="color:#c97b2a;">Enero y febrero fueron débiles — el pico de marzo fue puntual, no una tendencia aún.</div>
         <div class="q-stat" style="color:#c97b2a;">Shares se mantienen bajos — poca capacidad de viralización.</div>
       </div>
       <div class="q-col">
-        <h4>Foco para el próximo trimestre</h4>
+        <h4>Señales clave para Q2</h4>
         <div class="q-stat">Identificar qué generó el spike de marzo y replicarlo de forma consistente.</div>
         <div class="q-stat">Meta de views próximo trimestre: 20.000–35.000/mes de forma estable.</div>
         <div class="q-stat">Fortalecer la estrategia de shares — contenido que invite a compartir.</div>
@@ -287,6 +437,8 @@ footer { text-align:center; margin-top:60px; padding:20px; font-size:11px; opaci
       <button class="mpill active" onclick="setMonth('ig','ene',this)">Enero</button>
       <button class="mpill" onclick="setMonth('ig','feb',this)">Febrero</button>
       <button class="mpill" onclick="setMonth('ig','mar',this)">Marzo</button>
+      <button class="mpill" onclick="setMonth('ig','abr',this)">Abril</button>
+      <button class="mpill" onclick="setMonth('ig','may',this)">Mayo</button>
     </div>
     <div class="krow k4">
       <div class="kcard" id="ig-k0"><div class="kval" id="ig-k0v"></div><div class="klbl" id="ig-k0l"></div><div class="kchg" id="ig-k0c"></div></div>
@@ -295,18 +447,15 @@ footer { text-align:center; margin-top:60px; padding:20px; font-size:11px; opaci
       <div class="kcard" id="ig-k3"><div class="kval" id="ig-k3v"></div><div class="klbl" id="ig-k3l"></div><div class="kchg" id="ig-k3c"></div></div>
     </div>
     <div class="chart-row">
-      <div class="chart-box"><div class="ctitle">Views — Ene a Mar</div><div class="chart-wrap"><canvas id="ig-views"></canvas></div></div>
-      <div class="chart-box"><div class="ctitle">Interacciones — Ene a Mar</div><div class="chart-wrap"><canvas id="ig-int"></canvas></div></div>
+      <div class="chart-box"><div class="ctitle">Views</div><div class="chart-wrap"><canvas id="ig-views"></canvas></div></div>
+      <div class="chart-box"><div class="ctitle">Interacciones</div><div class="chart-wrap"><canvas id="ig-int"></canvas></div></div>
     </div>
     <div class="chart-row">
-      <div class="chart-box"><div class="ctitle">Accounts Reached — Ene a Mar</div><div class="chart-wrap"><canvas id="ig-reach"></canvas></div></div>
-      <div class="chart-box"><div class="ctitle">Seguidores nuevos — Ene a Mar</div><div class="chart-wrap"><canvas id="ig-seg"></canvas></div></div>
+      <div class="chart-box"><div class="ctitle">Accounts Reached</div><div class="chart-wrap"><canvas id="ig-reach"></canvas></div></div>
+      <div class="chart-box"><div class="ctitle">Seguidores nuevos</div><div class="chart-wrap"><canvas id="ig-seg"></canvas></div></div>
     </div>
-
-    <div class="slabel" style="margin-top:28px;">Top contenidos del mes</div>
-    <div class="top-grid" id="ig-top-grid">
-      <!-- populated by JS -->
-    </div>
+    <div class="slabel" style="margin-top:24px;">Top contenidos del mes</div>
+    <div class="top-grid" id="ig-top-grid"></div>
   </div>
 
   <!-- PAUTA META -->
@@ -315,6 +464,8 @@ footer { text-align:center; margin-top:60px; padding:20px; font-size:11px; opaci
       <button class="mpill active" onclick="setMonth('p','ene',this)">Enero</button>
       <button class="mpill" onclick="setMonth('p','feb',this)">Febrero</button>
       <button class="mpill" onclick="setMonth('p','mar',this)">Marzo</button>
+      <button class="mpill" onclick="setMonth('p','abr',this)">Abril</button>
+      <button class="mpill" onclick="setMonth('p','may',this)">Mayo</button>
     </div>
     <div class="krow k4">
       <div class="kcard" id="p-k0"><div class="kval" id="p-k0v"></div><div class="klbl" id="p-k0l"></div><div class="kchg" id="p-k0c"></div></div>
@@ -323,12 +474,34 @@ footer { text-align:center; margin-top:60px; padding:20px; font-size:11px; opaci
       <div class="kcard" id="p-k3"><div class="kval" id="p-k3v"></div><div class="klbl" id="p-k3l"></div><div class="kchg" id="p-k3c"></div></div>
     </div>
     <div class="chart-row">
-      <div class="chart-box"><div class="ctitle">Inversión COP — Ene a Mar</div><div class="chart-wrap"><canvas id="p-inv"></canvas></div></div>
-      <div class="chart-box"><div class="ctitle">Clics — Ene a Mar</div><div class="chart-wrap"><canvas id="p-clics"></canvas></div></div>
+      <div class="chart-box"><div class="ctitle">Inversión COP</div><div class="chart-wrap"><canvas id="p-inv"></canvas></div></div>
+      <div class="chart-box"><div class="ctitle">Alcance</div><div class="chart-wrap"><canvas id="p-alc"></canvas></div></div>
     </div>
     <div class="chart-row">
-      <div class="chart-box"><div class="ctitle">CTR % — Ene a Mar</div><div class="chart-wrap"><canvas id="p-ctr"></canvas></div></div>
-      <div class="chart-box"><div class="ctitle">Impresiones vs Alcance — Ene a Mar</div><div class="chart-wrap"><canvas id="p-imp"></canvas></div></div>
+      <div class="chart-box"><div class="ctitle">Clics</div><div class="chart-wrap"><canvas id="p-clics"></canvas></div></div>
+      <div class="chart-box"><div class="ctitle">CTR %</div><div class="chart-wrap"><canvas id="p-ctr"></canvas></div></div>
+    </div>
+
+    <!-- Detalle campañas mayo (solo visible cuando el mes activo es mayo) -->
+    <div id="p-may-detail" style="display:none;margin-top:8px;">
+      <div class="slabel" style="margin-top:20px;">Desglose de campañas · Mayo 2026</div>
+      <table class="tbl" style="margin-bottom:10px;">
+        <thead><tr><th>Campaña</th><th>Alcance</th><th>Impresiones</th><th>Clics</th><th>CTR</th><th>CPC (₡)</th><th>Performance</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Velo Lanzamiento</strong></td><td>18.480</td><td>33.707</td><td>1.481</td><td style="color:#2a7d4f;font-weight:bold;">7,73%</td><td style="color:#2a7d4f;font-weight:bold;">₡108</td><td><span class="tag g">⭐ Mejor campaña</span></td></tr>
+          <tr><td>Interacción Post Togo</td><td>10.788</td><td>19.716</td><td>398</td><td>3,56%</td><td>₡167</td><td><span class="tag g">Eficiente</span></td></tr>
+          <tr><td>IG: Un café muy especial</td><td>8.210</td><td>10.667</td><td>199</td><td>2,38%</td><td>₡326</td><td><span class="tag g">Buena</span></td></tr>
+          <tr><td>IG: El lugar donde el…</td><td>14.139</td><td>21.336</td><td>356</td><td>2,26%</td><td>₡353</td><td><span class="tag g">Buena</span></td></tr>
+          <tr><td>Chocolate Tráfico</td><td>10.143</td><td>10.216</td><td>104</td><td>1,00%</td><td>₡288</td><td><span class="tag a">Ok</span></td></tr>
+          <tr><td>Taste Freedom ft. Sibö</td><td>28.587</td><td>39.146</td><td>62</td><td>0,21%</td><td>₡791</td><td><span class="tag r">Bajo</span></td></tr>
+          <tr><td>PUNK</td><td>59.448</td><td>84.326</td><td>122</td><td>0,20%</td><td>₡934</td><td><span class="tag r">Caro · alto alcance</span></td></tr>
+          <tr><td>Libertario and Friends</td><td>42.385</td><td>53.990</td><td>60</td><td>0,14%</td><td>₡981</td><td><span class="tag r">Bajo</span></td></tr>
+          <tr><td>Colores de Comida</td><td>34.311</td><td>41.518</td><td>22</td><td style="color:#c0392b;">0,06%</td><td style="color:#c0392b;">₡2.394</td><td><span class="tag r">⚠ Pausar</span></td></tr>
+        </tbody>
+      </table>
+      <div style="background:rgba(42,125,79,0.08);border-radius:8px;padding:14px 18px;font-size:13px;border-left:3px solid #2a7d4f;">
+        <strong>🏆 Insight clave:</strong> "Velo Lanzamiento" generó el 52,8% de todos los clics del mes con el CPC más bajo (₡108). "Colores de Comida" y "Libertario and Friends" tuvieron CPC >₡900 con CTR <0,15% — candidatos a pausar. El CPC promedio ponderado del mes fue <strong>₡257</strong>, el mejor del año.
+      </div>
     </div>
   </div>
 
@@ -338,6 +511,7 @@ footer { text-align:center; margin-top:60px; padding:20px; font-size:11px; opaci
       <button class="mpill active" onclick="setMonth('tt','ene',this)">Enero</button>
       <button class="mpill" onclick="setMonth('tt','feb',this)">Febrero</button>
       <button class="mpill" onclick="setMonth('tt','mar',this)">Marzo</button>
+      <button class="mpill" onclick="setMonth('tt','abr',this)">Abril</button>
     </div>
     <div class="krow k4">
       <div class="kcard" id="tt-k0"><div class="kval" id="tt-k0v"></div><div class="klbl" id="tt-k0l"></div><div class="kchg" id="tt-k0c"></div></div>
@@ -346,136 +520,565 @@ footer { text-align:center; margin-top:60px; padding:20px; font-size:11px; opaci
       <div class="kcard" id="tt-k3"><div class="kval" id="tt-k3v"></div><div class="klbl" id="tt-k3l"></div><div class="kchg" id="tt-k3c"></div></div>
     </div>
     <div class="chart-row">
-      <div class="chart-box"><div class="ctitle">Views — Ene a Mar</div><div class="chart-wrap"><canvas id="tt-views"></canvas></div></div>
-      <div class="chart-box"><div class="ctitle">Likes — Ene a Mar</div><div class="chart-wrap"><canvas id="tt-likes"></canvas></div></div>
+      <div class="chart-box"><div class="ctitle">Video Views (orgánico + pauta)</div><div class="chart-wrap"><canvas id="tt-views"></canvas></div></div>
+      <div class="chart-box"><div class="ctitle">Likes</div><div class="chart-wrap"><canvas id="tt-likes"></canvas></div></div>
     </div>
     <div class="chart-row">
-      <div class="chart-box"><div class="ctitle">Seguidores nuevos — Ene a Mar</div><div class="chart-wrap"><canvas id="tt-seg"></canvas></div></div>
-      <div class="chart-box"><div class="ctitle">Shares y Comments — Ene a Mar</div><div class="chart-wrap"><canvas id="tt-eng"></canvas></div></div>
+      <div class="chart-box"><div class="ctitle">Seguidores nuevos</div><div class="chart-wrap"><canvas id="tt-seg"></canvas></div></div>
+      <div class="chart-box"><div class="ctitle">Shares y Comments</div><div class="chart-wrap"><canvas id="tt-eng"></canvas></div></div>
     </div>
+  </div>
+</div>
 
-    <div class="slabel" style="margin-top:28px;">Top contenidos del mes</div>
-    <div class="top-grid" id="tt-top-grid"></div>
+<!-- ═══════ FIDELIZACIÓN ═══════ -->
+<div id="view-fidel" class="view">
+  <div class="tab-row" style="margin-bottom:16px;">
+    <button class="pill active" onclick="showFidelTab('pass',this)">Passtastic · Programa de Fidelización</button>
+    <button class="pill" onclick="showFidelTab('fiwex',this)">Fiwex · Tráfico del local</button>
   </div>
 
-</div><!-- /mensual -->
+  <!-- PASSTASTIC -->
+  <div id="fidel-pass" class="pblock active">
+    <div style="font-size:12px;opacity:.5;margin-bottom:14px;">Programa de tarjeta de fidelización lanzado en Marzo 2026. Datos de miembros, cupones y recurrencia.</div>
+    <div class="tab-row" style="margin-bottom:20px;">
+      <button class="mpill active" onclick="setFidelMonth('mar',this)">Marzo</button>
+      <button class="mpill" onclick="setFidelMonth('abr',this)">Abril</button>
+      <button class="mpill" onclick="setFidelMonth('may',this)">Mayo</button>
+    </div>
+    <div id="fidel-content"></div>
+  </div>
 
-<footer>Libertario Coffee Co. & Roasters · Costa Rica · Q1 2026</footer>
+  <!-- FIWEX / WIFI TRÁFICO -->
+  <div id="fidel-fiwex" class="pblock">
+
+    <!-- Hero growth stat -->
+    <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:12px;margin-bottom:16px;">
+      <div style="background:#1a2b5e;color:#f0ece4;border-radius:8px;padding:22px 26px;display:flex;flex-direction:column;justify-content:space-between;">
+        <div style="font-size:10px;letter-spacing:3px;text-transform:uppercase;opacity:.5;">Crecimiento de tráfico WiFi · Ene → Abr</div>
+        <div><span style="font-size:52px;font-weight:bold;color:#c97b2a;">+1.007%</span></div>
+        <div style="font-size:13px;opacity:.65;line-height:1.5;">El local pasó de 84 conexiones en enero a ~930 estimadas en abril. El canal físico está en pleno crecimiento.</div>
+      </div>
+      <div style="background:white;border-radius:8px;padding:20px;text-align:center;display:flex;flex-direction:column;justify-content:center;">
+        <div style="font-size:44px;font-weight:bold;line-height:1;">353</div>
+        <div style="font-size:10px;text-transform:uppercase;letter-spacing:1.5px;opacity:.4;margin-top:6px;">Clientes en DB WiFi</div>
+        <div style="font-size:12px;color:#2a7d4f;margin-top:8px;">Acumulado ene–abr</div>
+      </div>
+      <div style="background:white;border-radius:8px;padding:20px;text-align:center;display:flex;flex-direction:column;justify-content:center;border-top:3px solid #c97b2a;">
+        <div style="font-size:44px;font-weight:bold;line-height:1;color:#c97b2a;">74,2%</div>
+        <div style="font-size:10px;text-transform:uppercase;letter-spacing:1.5px;opacity:.4;margin-top:6px;">Sin Passtastic aún</div>
+        <div style="font-size:12px;color:#c97b2a;margin-top:8px;">262 clientes por activar</div>
+      </div>
+    </div>
+
+    <!-- Monthly tiles -->
+    <div class="krow" style="grid-template-columns:repeat(4,1fr);margin-bottom:14px;">
+      <div class="kcard" style="border-top-color:#1a2b5e;border-top-width:3px;border-top-style:solid;">
+        <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;opacity:.35;margin-bottom:10px;">Enero · Base</div>
+        <div class="kval" style="font-size:22px;">84</div><div class="klbl">Conexiones WiFi</div>
+        <div class="kchg chg-neu">60 visitantes · 3/día</div>
+      </div>
+      <div class="kcard up">
+        <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;opacity:.35;margin-bottom:10px;">Febrero · ↑ Boom</div>
+        <div class="kval" style="font-size:22px;">523</div><div class="klbl">Conexiones WiFi</div>
+        <div class="kchg chg-up">+523% · 368 visitantes · 19/día</div>
+      </div>
+      <div class="kcard up">
+        <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;opacity:.35;margin-bottom:10px;">Marzo · → Crece</div>
+        <div class="kval" style="font-size:22px;">615</div><div class="klbl">Conexiones WiFi</div>
+        <div class="kchg chg-up">+17,6% · 393 visitantes · 20/día</div>
+      </div>
+      <div class="kcard up">
+        <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;opacity:.35;margin-bottom:10px;">Abril · est. ↑</div>
+        <div class="kval" style="font-size:22px;">~930</div><div class="klbl">Conexiones WiFi</div>
+        <div class="kchg chg-up">~51% · 31 conexiones/día prom.</div>
+      </div>
+    </div>
+
+    <!-- Growth charts -->
+    <div class="chart-row" style="margin-bottom:20px;">
+      <div class="chart-box">
+        <div class="ctitle">Conexiones WiFi mensuales · crecimiento acumulado</div>
+        <div class="chart-wrap"><canvas id="fiwex-conn"></canvas></div>
+      </div>
+      <div class="chart-box">
+        <div class="ctitle">Visitantes únicos por mes · Ene–Mar (Abr en medición)</div>
+        <div class="chart-wrap"><canvas id="fiwex-cli"></canvas></div>
+      </div>
+    </div>
+
+    <!-- Conversion Funnel -->
+    <div class="slabel">Funnel de fidelización · Del tráfico físico al cliente leal</div>
+    <div class="fidel-section" style="margin-bottom:14px;">
+      <div style="font-size:12px;opacity:.5;margin-bottom:22px;">Cada etapa representa cuántos de los 353 clientes en la base WiFi avanzan al siguiente nivel de relación con Libertario.</div>
+
+      <div style="margin-bottom:16px;">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;">
+          <span style="font-size:13px;font-weight:bold;">1 · Visitantes en base WiFi</span>
+          <span style="font-size:20px;font-weight:bold;">353 <span style="font-size:12px;opacity:.4;font-weight:normal;">100%</span></span>
+        </div>
+        <div class="db-track" style="height:22px;"><div class="db-fill" style="width:100%;height:22px;border-radius:5px;background:#1a2b5e;"></div></div>
+        <div style="font-size:11px;opacity:.4;margin-top:4px;">Personas que se conectaron al WiFi del local al menos una vez</div>
+      </div>
+
+      <div style="margin-bottom:16px;">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;">
+          <span style="font-size:13px;font-weight:bold;">2 · Miembros Passtastic</span>
+          <span style="font-size:20px;font-weight:bold;color:#2a7d4f;">91 <span style="font-size:12px;opacity:.4;font-weight:normal;">25,8%</span></span>
+        </div>
+        <div class="db-track" style="height:22px;"><div class="db-fill green" style="width:25.8%;height:22px;border-radius:5px;"></div></div>
+        <div style="font-size:11px;opacity:.4;margin-top:4px;">De cada 4 visitantes WiFi, 1 se unió al programa de fidelización</div>
+      </div>
+
+      <div style="margin-bottom:16px;">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;">
+          <span style="font-size:13px;font-weight:bold;">3 · Recurrentes (volvieron en abril)</span>
+          <span style="font-size:20px;font-weight:bold;color:#c97b2a;">37 <span style="font-size:12px;opacity:.4;font-weight:normal;">10,5% del total · 40,7% de miembros</span></span>
+        </div>
+        <div class="db-track" style="height:22px;"><div class="db-fill amber" style="width:10.5%;height:22px;border-radius:5px;"></div></div>
+        <div style="font-size:11px;opacity:.4;margin-top:4px;">4 de cada 10 miembros Passtastic volvieron el mes siguiente — buena retención</div>
+      </div>
+
+      <div style="margin-bottom:16px;">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;">
+          <span style="font-size:13px;font-weight:bold;">4 · Habituales (5+ visitas)</span>
+          <span style="font-size:20px;font-weight:bold;">~84 <span style="font-size:12px;opacity:.4;font-weight:normal;">23,7% del total DB</span></span>
+        </div>
+        <div class="db-track" style="height:22px;"><div class="db-fill" style="width:23.7%;height:22px;border-radius:5px;background:#c97b2a;"></div></div>
+        <div style="font-size:11px;opacity:.4;margin-top:4px;">Clientes con 5 o más visitas — la base del negocio recurrente</div>
+      </div>
+
+      <div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;">
+          <span style="font-size:13px;font-weight:bold;">5 · Cupones canjeados</span>
+          <span style="font-size:20px;font-weight:bold;color:#c0392b;">0 <span style="font-size:12px;font-weight:normal;color:#c0392b;">de 91 emitidos</span></span>
+        </div>
+        <div class="db-track" style="height:22px;"><div style="width:100%;height:22px;border-radius:5px;border:2px dashed rgba(192,57,43,.4);background:rgba(192,57,43,.07);display:flex;align-items:center;justify-content:center;font-size:11px;color:#c0392b;font-weight:bold;">0% · OPORTUNIDAD CRÍTICA · 91 cupones sin activar = 91 razones para volver</div></div>
+      </div>
+    </div>
+
+    <!-- Demographics evolution -->
+    <div class="slabel">Evolución del perfil del visitante · Ene–Mar 2026</div>
+    <div class="fidel-section" style="margin-bottom:14px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;">
+
+        <!-- Enero -->
+        <div>
+          <div style="font-size:10px;letter-spacing:3px;text-transform:uppercase;opacity:.35;margin-bottom:14px;border-bottom:2px solid rgba(26,43,94,.1);padding-bottom:8px;">Enero · 60 visitantes</div>
+          <div class="demo-bar"><div class="db-label"><span>Mujeres</span><span>50%</span></div><div class="db-track"><div class="db-fill" style="width:50%"></div></div></div>
+          <div class="demo-bar"><div class="db-label"><span>Hombres</span><span>50%</span></div><div class="db-track"><div class="db-fill green" style="width:50%"></div></div></div>
+          <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;opacity:.4;margin:14px 0 10px;">Top países</div>
+          <div class="demo-bar"><div class="db-label"><span>Costa Rica</span><span>45</span></div><div class="db-track"><div class="db-fill amber" style="width:100%"></div></div></div>
+          <div class="demo-bar"><div class="db-label"><span>Paraguay</span><span>5</span></div><div class="db-track"><div class="db-fill amber" style="width:11%"></div></div></div>
+          <div class="demo-bar"><div class="db-label"><span>Comoros</span><span>2</span></div><div class="db-track"><div class="db-fill amber" style="width:4%"></div></div></div>
+          <div style="font-size:11px;color:#c97b2a;margin-top:10px;">Pico: 15:00–20:00</div>
+        </div>
+
+        <!-- Febrero -->
+        <div>
+          <div style="font-size:10px;letter-spacing:3px;text-transform:uppercase;opacity:.35;margin-bottom:14px;border-bottom:2px solid rgba(26,43,94,.1);padding-bottom:8px;">Febrero · 368 visitantes</div>
+          <div class="demo-bar"><div class="db-label"><span>Mujeres</span><span>57,1%</span></div><div class="db-track"><div class="db-fill" style="width:57%"></div></div></div>
+          <div class="demo-bar"><div class="db-label"><span>Hombres</span><span>42,9%</span></div><div class="db-track"><div class="db-fill green" style="width:43%"></div></div></div>
+          <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;opacity:.4;margin:14px 0 10px;">Top países</div>
+          <div class="demo-bar"><div class="db-label"><span>Costa Rica</span><span>269</span></div><div class="db-track"><div class="db-fill amber" style="width:100%"></div></div></div>
+          <div class="demo-bar"><div class="db-label"><span>EE.UU.</span><span>24</span></div><div class="db-track"><div class="db-fill amber" style="width:8.9%"></div></div></div>
+          <div class="demo-bar"><div class="db-label"><span>Colombia</span><span>20</span></div><div class="db-track"><div class="db-fill amber" style="width:7.4%"></div></div></div>
+          <div style="font-size:11px;color:#2a7d4f;margin-top:10px;">Pico: 11:00–15:00 · Turismo de día</div>
+        </div>
+
+        <!-- Marzo -->
+        <div>
+          <div style="font-size:10px;letter-spacing:3px;text-transform:uppercase;opacity:.35;margin-bottom:14px;border-bottom:2px solid rgba(26,43,94,.1);padding-bottom:8px;">Marzo · 393 visitantes</div>
+          <div class="demo-bar"><div class="db-label"><span>Mujeres</span><span>60,1%</span></div><div class="db-track"><div class="db-fill" style="width:60%"></div></div></div>
+          <div class="demo-bar"><div class="db-label"><span>Hombres</span><span>39,9%</span></div><div class="db-track"><div class="db-fill green" style="width:40%"></div></div></div>
+          <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;opacity:.4;margin:14px 0 10px;">Top países</div>
+          <div class="demo-bar"><div class="db-label"><span>Costa Rica</span><span>277</span></div><div class="db-track"><div class="db-fill amber" style="width:100%"></div></div></div>
+          <div class="demo-bar"><div class="db-label"><span>Colombia</span><span>30</span></div><div class="db-track"><div class="db-fill amber" style="width:10.8%"></div></div></div>
+          <div class="demo-bar"><div class="db-label"><span>EE.UU.</span><span>27</span></div><div class="db-track"><div class="db-fill amber" style="width:9.7%"></div></div></div>
+          <div style="font-size:11px;color:#2a7d4f;margin-top:10px;">Pico: 15:00–20:00 · Audiencia femenina crece</div>
+        </div>
+      </div>
+
+      <!-- Trend insight -->
+      <div style="margin-top:20px;background:#f0ece4;border-radius:8px;padding:14px 18px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;">
+        <div><span style="font-size:10px;text-transform:uppercase;letter-spacing:1px;opacity:.4;">Tendencia género</span><br><span style="font-size:13px;margin-top:4px;display:block;">La audiencia femenina creció de 50% → 57% → <strong>60%</strong>. El perfil del visitante se consolida como mujer joven de 24–29 años.</span></div>
+        <div><span style="font-size:10px;text-transform:uppercase;letter-spacing:1px;opacity:.4;">Tendencia origen</span><br><span style="font-size:13px;margin-top:4px;display:block;">Colombia se mantiene como segundo país en visitantes internacionales. EE.UU. también crece. El local atrae turismo.</span></div>
+        <div><span style="font-size:10px;text-transform:uppercase;letter-spacing:1px;opacity:.4;">Oportunidad Q2</span><br><span style="font-size:13px;margin-top:4px;display:block;">Con 262 clientes WiFi sin Passtastic, una campaña de conversión en mayo puede duplicar la base de miembros activos.</span></div>
+      </div>
+    </div>
+
+    <!-- Email / Activación -->
+    <div class="fidel-section">
+      <h3>Activaciones del canal WiFi · Fiwex</h3>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+        <div>
+          <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;opacity:.4;margin-bottom:12px;">Email Marketing · Febrero 2026</div>
+          <div class="krow k3" style="gap:10px;">
+            <div class="kcard"><div class="kval" style="font-size:20px;">26</div><div class="klbl">Abiertos</div></div>
+            <div class="kcard"><div class="kval" style="font-size:20px;">3</div><div class="klbl">Clicks</div><div class="kchg chg-neu">CTR 11,5%</div></div>
+            <div class="kcard up"><div class="kval" style="font-size:20px;">1.180</div><div class="klbl">Vistas flyer</div><div class="kchg chg-up">722 únicas</div></div>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;opacity:.4;margin-bottom:12px;">Felicitaciones cumpleaños · Activadas Mar 2026</div>
+          <div class="krow k3" style="gap:10px;">
+            <div class="kcard"><div class="kval" style="font-size:20px;">84</div><div class="klbl">Enviadas</div></div>
+            <div class="kcard"><div class="kval" style="font-size:20px;">10</div><div class="klbl">Abiertas/mes</div></div>
+            <div class="kcard warn"><div class="kval" style="font-size:20px;">1</div><div class="klbl">Click/mes</div><div class="kchg chg-warn">Activar más</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ CONCLUSIONES ═══════ -->
+<div id="view-conclusiones" class="view">
+
+  <div style="font-size:12px;opacity:.5;margin-bottom:18px;">Aprendizajes mensuales + plan de acción definido para el mes siguiente · tracking estratégico de ejecución</div>
+
+  <div class="tab-row" style="margin-bottom:24px;">
+    <button class="mpill active" onclick="setConclusionMonth('ene',this)">Enero</button>
+    <button class="mpill" onclick="setConclusionMonth('feb',this)">Febrero</button>
+    <button class="mpill" onclick="setConclusionMonth('mar',this)">Marzo</button>
+    <button class="mpill" onclick="setConclusionMonth('abr',this)">Abril</button>
+    <button class="mpill" onclick="setConclusionMonth('mayo',this)">Mayo</button>
+    <button class="mpill" onclick="setConclusionMonth('junio',this)" style="border-color:rgba(26,43,94,.35);font-weight:bold;">Plan Junio ›</button>
+  </div>
+
+  <!-- ══ ENERO ══ -->
+  <div id="concl-ene" class="pblock active">
+    <div class="plan-intro" style="margin-bottom:20px;">
+      <div>
+        <div class="pi-title">Enero 2026 · Datos del mes</div>
+        <div class="pi-sub">Base de inicio del año</div>
+      </div>
+    </div>
+    <div class="krow k4">
+      <div class="kcard"><div class="kval">9.078</div><div class="klbl">Seguidores IG</div><div class="kchg chg-neu">Inicio de año</div></div>
+      <div class="kcard"><div class="kval">128K</div><div class="klbl">Views IG</div><div class="kchg chg-neu">—</div></div>
+      <div class="kcard"><div class="kval">1.347</div><div class="klbl">Interacciones IG</div><div class="kchg chg-neu">—</div></div>
+      <div class="kcard"><div class="kval">18.592</div><div class="klbl">Views TikTok</div><div class="kchg chg-neu">—</div></div>
+    </div>
+    <div class="krow k4" style="margin-top:10px;">
+      <div class="kcard"><div class="kval">₡687K</div><div class="klbl">Inversión pauta</div><div class="kchg chg-neu">CTR 1,96%</div></div>
+      <div class="kcard"><div class="kval">84</div><div class="klbl">Conexiones Fiwex</div><div class="kchg chg-neu">Inicio del programa</div></div>
+      <div class="kcard"><div class="kval">—</div><div class="klbl">Passtastic</div><div class="kchg chg-neu">No lanzado aún</div></div>
+      <div class="kcard"><div class="kval">73K</div><div class="klbl">Reach IG</div><div class="kchg chg-neu">—</div></div>
+    </div>
+  </div>
+
+  <!-- ══ FEBRERO ══ -->
+  <div id="concl-feb" class="pblock">
+    <div class="plan-intro" style="margin-bottom:20px;">
+      <div>
+        <div class="pi-title">Febrero 2026 · Datos del mes</div>
+        <div class="pi-sub">—</div>
+      </div>
+    </div>
+    <div class="krow k4">
+      <div class="kcard up"><div class="kval">9.471</div><div class="klbl">Seguidores IG</div><div class="kchg chg-up">+393 nuevos</div></div>
+      <div class="kcard up"><div class="kval">178K</div><div class="klbl">Views IG</div><div class="kchg chg-up">+39,4% vs enero</div></div>
+      <div class="kcard up"><div class="kval">2.710</div><div class="klbl">Interacciones IG</div><div class="kchg chg-up">+101% vs enero</div></div>
+      <div class="kcard down"><div class="kval">9.342</div><div class="klbl">Views TikTok</div><div class="kchg chg-down">-49,8% vs enero</div></div>
+    </div>
+    <div class="krow k4" style="margin-top:10px;">
+      <div class="kcard down"><div class="kval">₡158K</div><div class="klbl">Inversión pauta</div><div class="kchg chg-down">CTR 0,69%</div></div>
+      <div class="kcard up"><div class="kval">523</div><div class="klbl">Conexiones Fiwex</div><div class="kchg chg-up">+523% vs enero</div></div>
+      <div class="kcard"><div class="kval">—</div><div class="klbl">Passtastic</div><div class="kchg chg-neu">No lanzado aún</div></div>
+      <div class="kcard warn"><div class="kval">71K</div><div class="klbl">Reach IG</div><div class="kchg chg-warn">-2% vs enero</div></div>
+    </div>
+  </div>
+
+  <!-- ══ MARZO ══ -->
+  <div id="concl-mar" class="pblock">
+    <div class="plan-intro" style="margin-bottom:20px;">
+      <div>
+        <div class="pi-title">Marzo 2026 · Datos del mes</div>
+        <div class="pi-sub">Viral en TikTok · Lanzamiento Passtastic</div>
+      </div>
+    </div>
+    <div class="krow k4">
+      <div class="kcard up"><div class="kval">10.462</div><div class="klbl">Seguidores IG</div><div class="kchg chg-up">+991 nuevos</div></div>
+      <div class="kcard up"><div class="kval">228K</div><div class="klbl">Views IG</div><div class="kchg chg-up">+28,1% vs febrero</div></div>
+      <div class="kcard up"><div class="kval">4.300</div><div class="klbl">Interacciones IG</div><div class="kchg chg-up">+58,7% — récord del año</div></div>
+      <div class="kcard up"><div class="kval">65.243</div><div class="klbl">Views TikTok</div><div class="kchg chg-up">+598% · viral</div></div>
+    </div>
+    <div class="krow k4" style="margin-top:10px;">
+      <div class="kcard up"><div class="kval">₡867K</div><div class="klbl">Inversión pauta</div><div class="kchg chg-up">CTR 2,20%</div></div>
+      <div class="kcard up"><div class="kval">615</div><div class="klbl">Conexiones Fiwex</div><div class="kchg chg-up">+17% vs febrero</div></div>
+      <div class="kcard up"><div class="kval">41</div><div class="klbl">Miembros Passtastic</div><div class="kchg chg-up">Lanzamiento · 96% retorno</div></div>
+      <div class="kcard down"><div class="kval">65K</div><div class="klbl">Reach IG</div><div class="kchg chg-down">-8,4% vs febrero</div></div>
+    </div>
+  </div>
+
+  <!-- ══ ABRIL ══ -->
+  <div id="concl-abr" class="pblock">
+    <div class="plan-intro" style="margin-bottom:20px;">
+      <div>
+        <div class="pi-title">Abril 2026 · Datos del mes</div>
+        <div class="pi-sub">Meta anual de seguidores alcanzada</div>
+      </div>
+    </div>
+    <div class="krow k4">
+      <div class="kcard up"><div class="kval">11.089</div><div class="klbl">Seguidores · META ✓</div><div class="kchg chg-up">+627 nuevos</div></div>
+      <div class="kcard up"><div class="kval">301K</div><div class="klbl">Views IG</div><div class="kchg chg-up">+31,9% vs marzo</div></div>
+      <div class="kcard down"><div class="kval">2.755</div><div class="klbl">Interacciones IG</div><div class="kchg chg-down">-35,9% vs marzo</div></div>
+      <div class="kcard down"><div class="kval">57.634</div><div class="klbl">Views TikTok</div><div class="kchg chg-down">-11,7% vs marzo</div></div>
+    </div>
+    <div class="krow k4" style="margin-top:10px;">
+      <div class="kcard down"><div class="kval">₡1,14M</div><div class="klbl">Inversión pauta</div><div class="kchg chg-down">CTR 0,37% · mínimo histórico</div></div>
+      <div class="kcard up"><div class="kval">930</div><div class="klbl">Conexiones Fiwex</div><div class="kchg chg-up">+51% vs marzo</div></div>
+      <div class="kcard up"><div class="kval">50</div><div class="klbl">Miembros Passtastic</div><div class="kchg chg-up">+22% · 97,4% retorno</div></div>
+      <div class="kcard up"><div class="kval">119K</div><div class="klbl">Reach IG</div><div class="kchg chg-up">+82% vs marzo</div></div>
+    </div>
+  </div>
+
+  <!-- ══ MAYO ══ -->
+  <div id="concl-mayo" class="pblock">
+    <div class="plan-intro" style="margin-bottom:20px;">
+      <div>
+        <div class="pi-title">Mayo 2026 · Resultados + Aprendizajes</div>
+        <div class="pi-sub">Interacciones se recuperan · 99,5% meta anual · Views estables</div>
+      </div>
+      <div style="text-align:right;font-size:10px;opacity:.5;letter-spacing:2px;text-transform:uppercase;">→ Plan para Junio</div>
+    </div>
+    <div class="krow k4" style="margin-bottom:18px;">
+      <div class="kcard up"><div class="kval">11.934</div><div class="klbl">Seguidores · 99,5% meta</div><div class="kchg chg-up">+845 nuevos · solo 66 del objetivo 12K</div></div>
+      <div class="kcard up"><div class="kval">307K</div><div class="klbl">Views IG</div><div class="kchg chg-up">+2,1% vs abril · tendencia estable</div></div>
+      <div class="kcard up"><div class="kval">3.617</div><div class="klbl">Interacciones</div><div class="kchg chg-up">+31,3% vs abril · fuerte rebote</div></div>
+      <div class="kcard warn"><div class="kval">90.521</div><div class="klbl">Accounts Reached</div><div class="kchg chg-warn">-24,2% vs abril · post-boost</div></div>
+    </div>
+    <div class="krow k4" style="margin-bottom:14px;">
+      <div class="kcard up"><div class="kval">92</div><div class="klbl">Nuevos miembros Passtastic</div><div class="kchg chg-up">+84% vs abril · 100% retorno</div></div>
+      <div class="kcard warn"><div class="kval">₡721K</div><div class="klbl">Inversión pauta</div><div class="kchg chg-warn">9 campañas · CPC ₡257 prom.</div></div>
+      <div class="kcard up"><div class="kval">528</div><div class="klbl">Clientes DB Fiwex</div><div class="kchg chg-up">+50% vs abril</div></div>
+      <div class="kcard down"><div class="kval">0</div><div class="klbl">Posts TikTok</div><div class="kchg chg-down">Mes inactivo</div></div>
+    </div>
+    <div style="background:rgba(26,43,94,0.05);border-radius:10px;padding:16px 20px;font-size:13px;line-height:1.8;margin-bottom:14px;">
+      <strong>Pauta mayo:</strong> "Velo Lanzamiento" fue la campaña más eficiente (CTR 7,73%, CPC ₡108) — generó el 52,8% de todos los clics. "Colores de Comida" tuvo CTR 0,06% y CPC ₡2.394. La diferencia entre una campaña bien elegida y una mal elegida es enorme.
+    </div>
+  </div>
+
+  <!-- ══ PLAN JUNIO (forward-looking) ══ -->
+  <div id="concl-junio" class="pblock">
+    <div class="plan-intro" style="margin-bottom:20px;">
+      <div>
+        <div class="pi-title">Plan de Acción · Junio 2026</div>
+        <div class="pi-sub">Basado en los datos de Mayo · Cierre de Q2 · Metas H1</div>
+      </div>
+      <div style="font-size:11px;opacity:.5;letter-spacing:2px;text-transform:uppercase;">Q2 · Semana 1–4</div>
+    </div>
+
+  <div class="plan-grid">
+
+    <!-- INSTAGRAM -->
+    <div class="plan-card">
+      <div class="plan-card-head">
+        <span class="pc-icon">📸</span>
+        <span class="pc-plat">Instagram</span>
+        <span class="plan-badge pb-high">Acción confirmada</span>
+      </div>
+      <div class="plan-body">
+        <div class="plan-kpis">
+          <div class="plan-kpi"><div class="pk-val">11.934</div><div class="pk-lbl">Seguidores mayo</div></div>
+          <div class="plan-kpi"><div class="pk-val">12.000</div><div class="pk-lbl">Meta cierre junio</div></div>
+          <div class="plan-kpi"><div class="pk-val">90K</div><div class="pk-lbl">Reach mayo (-24,2%)</div></div>
+        </div>
+        <div class="plan-action"><div class="pa-dot" style="background:#1a2b5e;"></div><div><strong>Mantener flujo de posteo</strong> — continuidad en la producción de contenido orgánico. Mayo tuvo buen engagement (3.617 interacciones, +31,3%).</div></div>
+        <div class="plan-action"><div class="pa-dot" style="background:#1a2b5e;"></div><div><strong>UGC (User Generated Content)</strong> — integrar contenido generado por clientes al mix de publicaciones.</div></div>
+        <div class="plan-action"><div class="pa-dot" style="background:#1a2b5e;"></div><div><strong>Aumentar posts pauteados desde Ads Manager</strong> — identificar los posts con mejor tracción orgánica (24-48h post publicación) y boostearlos. Mayo: el reach cayó -24,2% sin pauta suficiente.</div></div>
+      </div>
+    </div>
+
+    <!-- TIKTOK -->
+    <div class="plan-card">
+      <div class="plan-card-head">
+        <span class="pc-icon">🎵</span>
+        <span class="pc-plat">TikTok</span>
+        <span class="plan-badge pb-high">Acción confirmada</span>
+      </div>
+      <div class="plan-body">
+        <div class="plan-kpis">
+          <div class="plan-kpi"><div class="pk-val">0</div><div class="pk-lbl">Posts en mayo</div></div>
+          <div class="plan-kpi"><div class="pk-val">2/sem</div><div class="pk-lbl">Meta junio</div></div>
+          <div class="plan-kpi"><div class="pk-val">~8</div><div class="pk-lbl">Posts totales en junio</div></div>
+        </div>
+        <div class="plan-action"><div class="pa-dot" style="background:#1a2b5e;"></div><div><strong>Reactivar el canal</strong> — mayo estuvo completamente inactivo. El algoritmo de TikTok penaliza la inactividad; hay que retomar presencia con consistencia.</div></div>
+        <div class="plan-action"><div class="pa-dot" style="background:#1a2b5e;"></div><div><strong>2 publicaciones por semana</strong> — mix de Reels (video) y carruseles, con peso en video. El único viral del año (marzo, +598% views) fue formato video.</div></div>
+      </div>
+    </div>
+
+    <!-- PASSTASTIC -->
+    <div class="plan-card">
+      <div class="plan-card-head">
+        <span class="pc-icon">☕</span>
+        <span class="pc-plat">Passtastic · Fidelización</span>
+        <span class="plan-badge pb-high">Acción confirmada</span>
+      </div>
+      <div class="plan-body">
+        <div class="plan-kpis">
+          <div class="plan-kpi"><div class="pk-val">189</div><div class="pk-lbl">Cupones emitidos (3 meses)</div></div>
+          <div class="plan-kpi"><div class="pk-val">0</div><div class="pk-lbl">Canjeados</div></div>
+          <div class="plan-kpi"><div class="pk-val">528</div><div class="pk-lbl">Clientes en DB</div></div>
+        </div>
+        <div class="plan-action"><div class="pa-dot" style="background:#c0392b;"></div><div><strong>Coordinación con Operaciones (paso previo)</strong> — definir cómo el cliente sabe cuántos puntos tiene y cómo se aplica el canje en caja. Sin este proceso claro, ninguna campaña resuelve el problema.</div></div>
+        <div class="plan-action"><div class="pa-dot" style="background:#1a2b5e;"></div><div><strong>Campaña de email por fases de puntos</strong> — segmentar la base de 528 clientes según puntos acumulados y enviar mensajes diferenciados. No mandar el mismo mensaje a todos.</div></div>
+      </div>
+    </div>
+
+  </div><!-- /plan-grid -->
+  </div><!-- /concl-junio pblock -->
+</div><!-- /view-conclusiones -->
+
+<footer>Libertario Coffee Co. & Roasters · Costa Rica · Ene–May 2026</footer>
 </div>
 
 <script>
 /* ─── DATA ─── */
-const MONTHS = ['Enero','Febrero','Marzo'];
-const monthIdx = { ene:0, feb:1, mar:2 };
+const MONTHS = ['Enero','Febrero','Marzo','Abril','Mayo'];
+const monthIdx = { ene:0, feb:1, mar:2, abr:3, may:4 };
 
 const igKPI = {
   ene:[
-    {v:'9.078',   l:'Seguidores',      c:'Inicio de año',              cls:'',     cc:'chg-neu'},
-    {v:'128.020', l:'Views',            c:'46,9% desde pauta',          cls:'',     cc:'chg-neu'},
-    {v:'73.053',  l:'Accounts Reached', c:'+35,6% vs diciembre',        cls:'up',   cc:'chg-up'},
-    {v:'1.347',   l:'Interacciones',    c:'~1,05% eng. rate',           cls:'',     cc:'chg-neu'},
+    {v:'9.078',   l:'Seguidores',      c:'Inicio de año',               cls:'',     cc:'chg-neu'},
+    {v:'128.020', l:'Views',            c:'46,9% desde pauta',           cls:'',     cc:'chg-neu'},
+    {v:'73.053',  l:'Accounts Reached', c:'+35,6% vs diciembre',         cls:'up',   cc:'chg-up'},
+    {v:'1.347',   l:'Interacciones',    c:'~1,05% eng. rate',            cls:'',     cc:'chg-neu'},
   ],
   feb:[
-    {v:'9.471',   l:'Seguidores',      c:'+393 nuevos (+4,3%)',         cls:'up',   cc:'chg-up'},
-    {v:'178.418', l:'Views',            c:'+39,4% vs enero',            cls:'up',   cc:'chg-up'},
-    {v:'71.585',  l:'Accounts Reached', c:'-2,0% vs enero',             cls:'warn', cc:'chg-warn'},
-    {v:'2.710',   l:'Interacciones',    c:'+101,2% vs enero',           cls:'up',   cc:'chg-up'},
+    {v:'9.471',   l:'Seguidores',      c:'+393 nuevos (+4,3%)',          cls:'up',   cc:'chg-up'},
+    {v:'178.418', l:'Views',            c:'+39,4% vs enero',             cls:'up',   cc:'chg-up'},
+    {v:'71.585',  l:'Accounts Reached', c:'-2,0% vs enero',              cls:'warn', cc:'chg-warn'},
+    {v:'2.710',   l:'Interacciones',    c:'+101,2% vs enero',            cls:'up',   cc:'chg-up'},
   ],
   mar:[
-    {v:'10.462',  l:'Seguidores',      c:'+991 nuevos (+10,5%)',        cls:'up',   cc:'chg-up'},
-    {v:'228.534', l:'Views',            c:'+28,1% vs febrero',          cls:'up',   cc:'chg-up'},
-    {v:'65.544',  l:'Accounts Reached', c:'-8,4% vs feb · 3 meses baja',cls:'down', cc:'chg-down'},
-    {v:'4.300',   l:'Interacciones',    c:'+58,7% vs febrero',          cls:'up',   cc:'chg-up'},
+    {v:'10.462',  l:'Seguidores',      c:'+991 nuevos (+10,5%)',         cls:'up',   cc:'chg-up'},
+    {v:'228.534', l:'Views',            c:'+28,1% vs febrero',           cls:'up',   cc:'chg-up'},
+    {v:'65.544',  l:'Accounts Reached', c:'-8,4% vs feb · 3 meses baja', cls:'down', cc:'chg-down'},
+    {v:'4.300',   l:'Interacciones',    c:'+58,7% vs febrero',           cls:'up',   cc:'chg-up'},
+  ],
+  abr:[
+    {v:'11.089',  l:'Seguidores',      c:'+627 nuevos (+6,0%) · META ANUAL',cls:'up',cc:'chg-up'},
+    {v:'301.546', l:'Views',            c:'+31,9% vs marzo',             cls:'up',   cc:'chg-up'},
+    {v:'119.478', l:'Accounts Reached', c:'+82,3% vs marzo · gran rebote',cls:'up',  cc:'chg-up'},
+    {v:'2.755',   l:'Interacciones',    c:'-35,9% vs marzo · bajó',      cls:'down', cc:'chg-down'},
+  ],
+  may:[
+    {v:'11.934',  l:'Seguidores',      c:'+845 nuevos (+7,6%) · 99,5% meta junio 12K',cls:'up',cc:'chg-up'},
+    {v:'307.807', l:'Views',            c:'+2,1% vs abril · tendencia estable',     cls:'up',   cc:'chg-up'},
+    {v:'90.521',  l:'Accounts Reached', c:'-24,2% vs abril · baja post-boost',      cls:'down', cc:'chg-down'},
+    {v:'3.617',   l:'Interacciones',    c:'+31,3% vs abril · fuerte recuperación',  cls:'up',   cc:'chg-up'},
   ]
 };
 
 const pKPI = {
   ene:[
-    {v:'$687.926',l:'Inversión COP',    c:'Mes irregular',              cls:'warn', cc:'chg-warn'},
-    {v:'378.424', l:'Impresiones',      c:'Mayor volumen del trimestre', cls:'up',   cc:'chg-up'},
-    {v:'2.192',   l:'Clics',            c:'CTR: 1,96%',                 cls:'',     cc:'chg-neu'},
-    {v:'8',       l:'Campañas activas', c:'En meta',                    cls:'up',   cc:'chg-up'},
+    {v:'$687.926',l:'Inversión COP',    c:'Mes irregular',               cls:'warn', cc:'chg-warn'},
+    {v:'378.424', l:'Impresiones',      c:'Mayor volumen del trimestre',  cls:'up',   cc:'chg-up'},
+    {v:'2.192',   l:'Clics',            c:'CTR: 1,96%',                  cls:'',     cc:'chg-neu'},
+    {v:'8',       l:'Campañas activas', c:'En meta',                     cls:'up',   cc:'chg-up'},
   ],
   feb:[
-    {v:'$158.710',l:'Inversión COP',    c:'-76,9% vs enero · mínimo Q1',cls:'warn', cc:'chg-warn'},
-    {v:'246.321', l:'Impresiones',      c:'-34,9% vs enero',            cls:'down', cc:'chg-down'},
-    {v:'1.299',   l:'Clics',            c:'CTR: 0,69% — peor del trim.',cls:'down', cc:'chg-down'},
-    {v:'10',      l:'Campañas activas', c:'Máximo del trimestre',       cls:'up',   cc:'chg-up'},
+    {v:'$158.710',l:'Inversión COP',    c:'-76,9% vs enero · mínimo Q1', cls:'warn', cc:'chg-warn'},
+    {v:'246.321', l:'Impresiones',      c:'-34,9% vs enero',             cls:'down', cc:'chg-down'},
+    {v:'1.299',   l:'Clics',            c:'CTR: 0,69% — peor del trim.', cls:'down', cc:'chg-down'},
+    {v:'10',      l:'Campañas activas', c:'Máximo del trimestre',        cls:'up',   cc:'chg-up'},
   ],
   mar:[
-    {v:'$867.607',l:'Inversión COP',    c:'+446,6% vs febrero',         cls:'warn', cc:'chg-warn'},
-    {v:'138.853', l:'Impresiones',      c:'-43,6% vs feb (más enfocado)',cls:'warn', cc:'chg-warn'},
-    {v:'2.725',   l:'Clics',            c:'CTR: 2,20% — mejor del trim.',cls:'up',  cc:'chg-up'},
-    {v:'$340',    l:'CPC (COP)',         c:'Sobre meta de 250–300',      cls:'down', cc:'chg-down'},
+    {v:'$867.607',l:'Inversión COP',    c:'+446,6% vs febrero',          cls:'warn', cc:'chg-warn'},
+    {v:'138.853', l:'Impresiones',      c:'-43,6% vs feb (más enfocado)', cls:'warn', cc:'chg-warn'},
+    {v:'2.725',   l:'Clics',            c:'CTR: 2,20% — mejor del trim.', cls:'up',  cc:'chg-up'},
+    {v:'$340',    l:'CPC (COP)',         c:'Sobre meta de 250–300',       cls:'down', cc:'chg-down'},
+  ],
+  abr:[
+    {v:'$1.139.736',l:'Inversión COP',  c:'+31,4% vs marzo · campañas de alcance',cls:'warn',cc:'chg-warn'},
+    {v:'520.973', l:'Impresiones',      c:'+275% vs marzo · gran escala', cls:'up',  cc:'chg-up'},
+    {v:'1.920',   l:'Clics',            c:'CTR 0,37% · foco en alcance', cls:'warn', cc:'chg-warn'},
+    {v:'$594',    l:'CPC (COP)',         c:'+74,7% vs marzo · optimizar', cls:'down', cc:'chg-down'},
+  ],
+  may:[
+    {v:'~$721K',  l:'Inversión COP',    c:'9 campañas · "Velo Lanzamiento" top',  cls:'warn', cc:'chg-warn'},
+    {v:'314.622', l:'Impresiones',       c:'-39,6% vs abril · menos volumen bruto', cls:'warn', cc:'chg-warn'},
+    {v:'2.804',   l:'Clics enlace',      c:'CTR 0,89% · recuperación vs abril 0,37%', cls:'up', cc:'chg-up'},
+    {v:'$257',    l:'CPC prom. (COP)',   c:'-56,7% vs abril · mejor CPC del año', cls:'up',   cc:'chg-up'},
   ]
 };
 
 const ttKPI = {
   ene:[
-    {v:'18.592',l:'Views',              c:'Mes de arranque',            cls:'',     cc:'chg-neu'},
-    {v:'580',   l:'Likes',              c:'—',                          cls:'',     cc:'chg-neu'},
-    {v:'+87',   l:'Seguidores nuevos',  c:'—',                          cls:'',     cc:'chg-neu'},
-    {v:'5',     l:'Shares',             c:'Bajo — área de mejora',      cls:'warn', cc:'chg-warn'},
+    {v:'18.592',l:'Views',              c:'Mes de arranque',             cls:'',     cc:'chg-neu'},
+    {v:'580',   l:'Likes',              c:'—',                           cls:'',     cc:'chg-neu'},
+    {v:'+87',   l:'Seguidores nuevos',  c:'—',                           cls:'',     cc:'chg-neu'},
+    {v:'5',     l:'Shares',             c:'Bajo — área de mejora',       cls:'warn', cc:'chg-warn'},
   ],
   feb:[
-    {v:'9.342', l:'Views',              c:'-49,8% vs enero',            cls:'down', cc:'chg-down'},
-    {v:'533',   l:'Likes',              c:'-8,1% vs enero',             cls:'down', cc:'chg-down'},
-    {v:'+52',   l:'Seguidores nuevos',  c:'-40,2% vs enero',            cls:'down', cc:'chg-down'},
-    {v:'20',    l:'Shares',             c:'+300% vs enero',             cls:'up',   cc:'chg-up'},
+    {v:'9.342', l:'Views',              c:'-49,8% vs enero',             cls:'down', cc:'chg-down'},
+    {v:'533',   l:'Likes',              c:'-8,1% vs enero',              cls:'down', cc:'chg-down'},
+    {v:'+52',   l:'Seguidores nuevos',  c:'-40,2% vs enero',             cls:'down', cc:'chg-down'},
+    {v:'20',    l:'Shares',             c:'+300% vs enero',              cls:'up',   cc:'chg-up'},
   ],
   mar:[
-    {v:'65.243',l:'Views',              c:'+598,5% vs febrero',         cls:'up',   cc:'chg-up'},
-    {v:'1.905', l:'Likes',              c:'+257,4% vs febrero',         cls:'up',   cc:'chg-up'},
-    {v:'+416',  l:'Seguidores nuevos',  c:'+700% vs febrero',           cls:'up',   cc:'chg-up'},
-    {v:'18',    l:'Shares',             c:'-10% vs feb · bajo',         cls:'warn', cc:'chg-warn'},
+    {v:'65.243',l:'Views',              c:'+598,5% vs febrero',          cls:'up',   cc:'chg-up'},
+    {v:'1.905', l:'Likes',              c:'+257,4% vs febrero',          cls:'up',   cc:'chg-up'},
+    {v:'+416',  l:'Seguidores nuevos',  c:'+700% vs febrero',            cls:'up',   cc:'chg-up'},
+    {v:'18',    l:'Shares',             c:'-10% vs feb · bajo',          cls:'warn', cc:'chg-warn'},
+  ],
+  abr:[
+    {v:'57.634', l:'Views (orgánico)',   c:'-11,7% vs marzo · 58% fue tail del viral de mar', cls:'down', cc:'chg-down'},
+    {v:'+282',   l:'Seguidores nuevos',  c:'-32% vs marzo · sin nuevo viral',                 cls:'warn', cc:'chg-warn'},
+    {v:'524',    l:'Likes (orgánico)',   c:'-72,5% vs marzo · gran caída',                    cls:'down', cc:'chg-down'},
+    {v:'48.656', l:'Views TikTok Ads',  c:'Punk + TIMO · 325 destination clicks',            cls:'up',   cc:'chg-up'},
   ]
 };
 
 const topContent = {
   ig: {
     ene:[
-      {tipo:'Reel',badge:'tc-reel',desc:'Lo cotidiano, vivido con propósito.',url:'https://www.instagram.com/reel/DTsi8QOjYun/',stat1:{v:'18.854',l:'Views'},stat2:{v:'144',l:'Likes'},stat3:{v:'14',l:'Saves'}},
-      {tipo:'Reel',badge:'tc-reel',desc:'Por momentos que conectan.',url:'https://www.instagram.com/reel/DUJAf53DRmo/',stat1:{v:'17.408',l:'Views'},stat2:{v:'110',l:'Likes'},stat3:{v:'21',l:'Saves'}},
-      {tipo:'Reel',badge:'tc-reel',desc:'Para los que saben que un café muy especial cambia el día.',url:'https://www.instagram.com/reel/DTJA1gbD5F4/',stat1:{v:'10.675',l:'Views'},stat2:{v:'114',l:'Likes'},stat3:{v:'9',l:'Saves'}},
+      {tipo:'Reel · #1',badge:'tc-reel',desc:'Lo cotidiano, vivido con propósito.',url:'https://www.instagram.com/reel/DTsi8QOjYun/',stat1:{v:'18.854',l:'Views'},stat2:{v:'144',l:'Likes'},stat3:{v:'14',l:'Saves'}},
+      {tipo:'Reel · #2',badge:'tc-reel',desc:'Por momentos que conectan.',url:'https://www.instagram.com/reel/DUJAf53DRmo/',stat1:{v:'17.408',l:'Views'},stat2:{v:'110',l:'Likes'},stat3:{v:'21',l:'Saves'}},
+      {tipo:'Reel · #3',badge:'tc-reel',desc:'Para los que saben que un café muy especial cambia el día.',url:'https://www.instagram.com/reel/DTJA1gbD5F4/',stat1:{v:'10.675',l:'Views'},stat2:{v:'114',l:'Likes'},stat3:{v:'9',l:'Saves'}},
     ],
     feb:[
-      {tipo:'Reel',badge:'tc-reel',desc:'El detalle también es parte del ritual.',url:'https://www.instagram.com/reel/DVBkgJBjbD-/',stat1:{v:'27.468',l:'Views'},stat2:{v:'513',l:'Likes'},stat3:{v:'74',l:'Saves'}},
-      {tipo:'Reel',badge:'tc-reel',desc:'El café es nuestra brújula. Nos recuerda elegir con intención.',url:'https://www.instagram.com/reel/DU6YdCqigwk/',stat1:{v:'16.573',l:'Views'},stat2:{v:'94',l:'Likes'},stat3:{v:'12',l:'Saves'}},
-      {tipo:'Reel',badge:'tc-reel',desc:'Nuestros BariRockStars saben qué café muy especial va con tu día.',url:'https://www.instagram.com/reel/DVJUj7ejRmI/',stat1:{v:'15.312',l:'Views'},stat2:{v:'131',l:'Likes'},stat3:{v:'18',l:'Saves'}},
+      {tipo:'Reel · #1',badge:'tc-reel',desc:'El detalle también es parte del ritual.',url:'https://www.instagram.com/reel/DVBkgJBjbD-/',stat1:{v:'27.468',l:'Views'},stat2:{v:'513',l:'Likes'},stat3:{v:'74',l:'Saves'}},
+      {tipo:'Reel · #2',badge:'tc-reel',desc:'El café es nuestra brújula. Nos recuerda elegir con intención.',url:'https://www.instagram.com/reel/DU6YdCqigwk/',stat1:{v:'16.573',l:'Views'},stat2:{v:'94',l:'Likes'},stat3:{v:'12',l:'Saves'}},
+      {tipo:'Reel · #3',badge:'tc-reel',desc:'Nuestros BariRockStars saben qué café muy especial va con tu día.',url:'https://www.instagram.com/reel/DVJUj7ejRmI/',stat1:{v:'15.312',l:'Views'},stat2:{v:'131',l:'Likes'},stat3:{v:'18',l:'Saves'}},
     ],
     mar:[
-      {tipo:'Reel',badge:'tc-reel',desc:'Explorar también es parte de nuestra brújula. Nuevos varietales.',url:'https://www.instagram.com/reel/DVjIXL8DQtW/',stat1:{v:'41.705',l:'Views'},stat2:{v:'257',l:'Likes'},stat3:{v:'36',l:'Saves'}},
-      {tipo:'Reel',badge:'tc-reel',desc:'Cada café que elegimos tiene una razón de ser. Conocé los perfiles.',url:'https://www.instagram.com/reel/DWPSdfOiltg/',stat1:{v:'36.797',l:'Views'},stat2:{v:'446',l:'Likes'},stat3:{v:'36',l:'Saves'}},
-      {tipo:'Reel',badge:'tc-reel',desc:'Cada método, cada varietal, una excusa nueva para descubrir algo distinto.',url:'https://www.instagram.com/reel/DWb9omPCld7/',stat1:{v:'29.902',l:'Views'},stat2:{v:'146',l:'Likes'},stat3:{v:'13',l:'Saves'}},
-    ]
-  },
-  tt: {
-    ene:[
-      {tipo:'TikTok',badge:'tc-tiktok',desc:'— datos por completar —',url:'',stat1:{v:'—',l:'Views'},stat2:{v:'—',l:'Likes'},stat3:{v:'—',l:'Shares'}},
-      {tipo:'TikTok',badge:'tc-tiktok',desc:'— datos por completar —',url:'',stat1:{v:'—',l:'Views'},stat2:{v:'—',l:'Likes'},stat3:{v:'—',l:'Shares'}},
-      {tipo:'TikTok',badge:'tc-tiktok',desc:'— datos por completar —',url:'',stat1:{v:'—',l:'Views'},stat2:{v:'—',l:'Likes'},stat3:{v:'—',l:'Shares'}},
+      {tipo:'Reel · #1',badge:'tc-reel',desc:'Explorar también es parte de nuestra brújula. Nuevos varietales.',url:'https://www.instagram.com/reel/DVjIXL8DQtW/',stat1:{v:'41.705',l:'Views'},stat2:{v:'257',l:'Likes'},stat3:{v:'36',l:'Saves'}},
+      {tipo:'Reel · #2',badge:'tc-reel',desc:'Cada café que elegimos tiene una razón de ser. Conocé los perfiles.',url:'https://www.instagram.com/reel/DWPSdfOiltg/',stat1:{v:'36.797',l:'Views'},stat2:{v:'446',l:'Likes'},stat3:{v:'36',l:'Saves'}},
+      {tipo:'Reel · #3',badge:'tc-reel',desc:'Cada método, cada varietal, una excusa nueva para descubrir algo distinto.',url:'https://www.instagram.com/reel/DWb9omPCld7/',stat1:{v:'29.902',l:'Views'},stat2:{v:'146',l:'Likes'},stat3:{v:'13',l:'Saves'}},
     ],
-    feb:[
-      {tipo:'TikTok',badge:'tc-tiktok',desc:'— datos por completar —',url:'',stat1:{v:'—',l:'Views'},stat2:{v:'—',l:'Likes'},stat3:{v:'—',l:'Shares'}},
-      {tipo:'TikTok',badge:'tc-tiktok',desc:'— datos por completar —',url:'',stat1:{v:'—',l:'Views'},stat2:{v:'—',l:'Likes'},stat3:{v:'—',l:'Shares'}},
-      {tipo:'TikTok',badge:'tc-tiktok',desc:'— datos por completar —',url:'',stat1:{v:'—',l:'Views'},stat2:{v:'—',l:'Likes'},stat3:{v:'—',l:'Shares'}},
+    abr:[
+      {tipo:'Post · #1',badge:'tc-reel',desc:'Publicación 17 de abril',url:'',stat1:{v:'204K',l:'Views'},stat2:{v:'—',l:'Likes'},stat3:{v:'—',l:'Saves'}},
+      {tipo:'Reel · #2',badge:'tc-reel',desc:'Publicación 6 de abril — BariRockStars',url:'',stat1:{v:'132K',l:'Views'},stat2:{v:'68',l:'Likes'},stat3:{v:'—',l:'Saves'}},
+      {tipo:'Post · #3',badge:'tc-reel',desc:'Publicación 13 de abril',url:'',stat1:{v:'63K',l:'Views'},stat2:{v:'—',l:'Likes'},stat3:{v:'—',l:'Saves'}},
     ],
-    mar:[
-      {tipo:'TikTok',badge:'tc-tiktok',desc:'— datos por completar —',url:'',stat1:{v:'—',l:'Views'},stat2:{v:'—',l:'Likes'},stat3:{v:'—',l:'Shares'}},
-      {tipo:'TikTok',badge:'tc-tiktok',desc:'— datos por completar —',url:'',stat1:{v:'—',l:'Views'},stat2:{v:'—',l:'Likes'},stat3:{v:'—',l:'Shares'}},
-      {tipo:'TikTok',badge:'tc-tiktok',desc:'— datos por completar —',url:'',stat1:{v:'—',l:'Views'},stat2:{v:'—',l:'Likes'},stat3:{v:'—',l:'Shares'}},
+    may:[
+      {tipo:'Reel · #1',badge:'tc-reel',desc:'Publicación 8 de mayo — mayor engagement del mes',url:'',stat1:{v:'—',l:'Views'},stat2:{v:'261',l:'Likes'},stat3:{v:'—',l:'Saves'}},
+      {tipo:'Reel · #2',badge:'tc-reel',desc:'Publicación 7 de mayo',url:'',stat1:{v:'—',l:'Views'},stat2:{v:'138',l:'Likes'},stat3:{v:'—',l:'Saves'}},
+      {tipo:'Reel · #3',badge:'tc-reel',desc:'Publicación 24 de mayo',url:'',stat1:{v:'—',l:'Views'},stat2:{v:'128',l:'Likes'},stat3:{v:'—',l:'Saves'}},
     ]
   }
 };
 
+/* ─── KPI RENDER ─── */
+function renderKPI(prefix, data) {
+  data.forEach((d,i) => {
+    document.getElementById(`${prefix}-k${i}`).className = 'kcard '+(d.cls||'');
+    document.getElementById(`${prefix}-k${i}v`).textContent = d.v;
+    document.getElementById(`${prefix}-k${i}l`).textContent = d.l;
+    const chg = document.getElementById(`${prefix}-k${i}c`);
+    chg.textContent = d.c; chg.className = 'kchg '+(d.cc||'');
+  });
+}
+
 function renderTopGrid(gridId, plat, m) {
   const grid = document.getElementById(gridId);
-  if (!grid) return;
-  const items = topContent[plat][m];
-  grid.innerHTML = items.map((item, i) => `
+  if (!grid || !topContent[plat] || !topContent[plat][m]) return;
+  grid.innerHTML = topContent[plat][m].map(item => `
     <div class="top-card">
-      <div class="tc-badge ${item.badge}" style="display:flex;align-items:center;justify-content:space-between;">
-        <span>${item.tipo} · #${i+1}</span>
+      <div class="tc-badge ${item.badge}">
+        <span>${item.tipo}</span>
         ${item.url ? `<a href="${item.url}" target="_blank" style="color:inherit;opacity:.6;font-size:10px;letter-spacing:1px;">Ver post →</a>` : ''}
       </div>
       <div class="tc-body">
@@ -489,19 +1092,6 @@ function renderTopGrid(gridId, plat, m) {
     </div>`).join('');
 }
 
-/* ─── KPI RENDER ─── */
-function renderKPI(prefix, data) {
-  data.forEach((d,i) => {
-    const card = document.getElementById(`${prefix}-k${i}`);
-    card.className = 'kcard ' + (d.cls||'');
-    document.getElementById(`${prefix}-k${i}v`).textContent = d.v;
-    document.getElementById(`${prefix}-k${i}l`).textContent = d.l;
-    const chg = document.getElementById(`${prefix}-k${i}c`);
-    chg.textContent = d.c;
-    chg.className = 'kchg ' + (d.cc||'');
-  });
-}
-
 /* ─── NAV ─── */
 const curMonth = { ig:'ene', p:'ene', tt:'ene' };
 
@@ -510,8 +1100,53 @@ function showView(id, btn) {
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('view-'+id).classList.add('active');
   btn.classList.add('active');
-  if (id === 'trim') initTrimCharts();
-  if (id === 'mensual') initMensualCharts();
+  if (id==='trim') initTrimCharts();
+  if (id==='mensual') initMensualCharts();
+  if (id==='fidel') renderFidel(curFidelMonth);
+  if (id==='anual') initGoalDonuts();
+  if (id==='conclusiones') {} // static content
+}
+
+/* ─── GOAL DONUTS (Objetivos Anuales) ─── */
+function mkDonut(id, pct, clampTo100, color) {
+  const el = document.getElementById(id);
+  if (!el || inited.has(id)) return;
+  inited.add(id);
+  const val = clampTo100 ? Math.min(pct, 100) : pct;
+  new Chart(el, {
+    type: 'doughnut',
+    data: {
+      datasets: [{
+        data: [val, 100 - val],
+        backgroundColor: [color, 'rgba(26,43,94,0.08)'],
+        borderWidth: 0,
+        borderRadius: 4
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false, animation: false,
+      cutout: '72%',
+      plugins: { legend: { display: false }, tooltip: { enabled: false } }
+    }
+  });
+}
+
+function initGoalDonuts() {
+  // Instagram
+  mkDonut('goal-seg',    99,  true,  '#2a7d4f');
+  mkDonut('goal-int',    100, true,  '#2a7d4f');
+  mkDonut('goal-reach',  60,  false, '#c97b2a');
+  mkDonut('goal-views',  43,  false, '#c0392b');
+  // Pauta Meta (abril vs meta mensual)
+  mkDonut('goal-p-alc',  100, true,  '#2a7d4f');   // exceeded → cap at 100%
+  mkDonut('goal-p-clic', 59,  false, '#c97b2a');
+  mkDonut('goal-p-ctr',  18,  false, '#c0392b');
+  mkDonut('goal-p-cpc',  46,  false, '#c0392b');
+  // TikTok (acumulado vs meta anual)
+  mkDonut('goal-tt-views', 46, false, '#c97b2a');
+  mkDonut('goal-tt-likes', 37, false, '#c97b2a');
+  mkDonut('goal-tt-seg',   61, false, '#2a7d4f');
+  mkDonut('goal-tt-shr',   21, false, '#c0392b');
 }
 
 function showTab(prefix, id, btn) {
@@ -534,107 +1169,519 @@ function setMonth(plat, m, btn) {
   curMonth[plat] = m;
   btn.closest('.tab-row').querySelectorAll('.mpill').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  const dataMap = {ig:igKPI, p:pKPI, tt:ttKPI};
-  renderKPI(plat, dataMap[plat][m]);
+  renderKPI(plat, {ig:igKPI,p:pKPI,tt:ttKPI}[plat][m]);
   highlightBar(plat, monthIdx[m]);
   if (plat==='ig') renderTopGrid('ig-top-grid','ig',m);
-  if (plat==='tt') renderTopGrid('tt-top-grid','tt',m);
+  if (plat==='p') {
+    const d = document.getElementById('p-may-detail');
+    if (d) d.style.display = m==='may' ? 'block' : 'none';
+  }
 }
 
 /* ─── CHARTS ─── */
 const NAV='#1a2b5e', GRN='#2a7d4f', AMB='#c97b2a';
 const inited = new Set();
-const ANIM = { animation:false };
 
-function barsRgba(hi, r, g, b) {
-  return [0,1,2].map(i => `rgba(${r},${g},${b},${i===hi?1:0.28})`);
+function barsRgba(hi, r, g, b, n) {
+  return Array.from({length: n||MONTHS.length}, (_,i) => `rgba(${r},${g},${b},${i===hi?1:0.25})`);
 }
 
 const baseOpts = {
   responsive:true, maintainAspectRatio:false, animation:false,
   plugins:{ legend:{display:false} },
   scales:{
-    x:{ grid:{display:false}, ticks:{font:{size:11},color:NAV} },
-    y:{ grid:{color:'rgba(26,43,94,0.07)'}, ticks:{font:{size:11},color:NAV} }
+    x:{ grid:{display:false}, ticks:{font:{size:10},color:NAV} },
+    y:{ grid:{color:'rgba(26,43,94,0.07)'}, ticks:{font:{size:10},color:NAV} }
   }
 };
 
-function mkBar(id, data, hi, r, g, b) {
+function mkBar(id, data, hi, r, g, b, labels) {
   const ctx = document.getElementById(id);
-  if (!ctx || inited.has(id)) return;
+  if (!ctx||inited.has(id)) return;
   inited.add(id);
-  const ch = new Chart(ctx, {
-    type:'bar',
-    data:{ labels:MONTHS, datasets:[{ data, backgroundColor:barsRgba(hi,r,g,b), borderRadius:5, borderSkipped:false }] },
-    options:{...baseOpts}
-  });
-  ctx._ch = ch;
+  ctx._ch = new Chart(ctx, { type:'bar', data:{ labels: labels||MONTHS, datasets:[{ data, backgroundColor:barsRgba(hi,r,g,b), borderRadius:4, borderSkipped:false }] }, options:{...baseOpts} });
 }
 
 function mkLine(id, data, color) {
   const ctx = document.getElementById(id);
-  if (!ctx || inited.has(id)) return;
+  if (!ctx||inited.has(id)) return;
   inited.add(id);
-  ctx._ch = new Chart(ctx, {
-    type:'line',
-    data:{ labels:MONTHS, datasets:[{ data, borderColor:color, backgroundColor:color+'22', fill:true, tension:0.35, pointBackgroundColor:color, pointRadius:5 }] },
-    options:{...baseOpts}
-  });
+  ctx._ch = new Chart(ctx, { type:'line', data:{ labels:MONTHS, datasets:[{ data, borderColor:color, backgroundColor:color+'22', fill:true, tension:0.35, pointBackgroundColor:color, pointRadius:4 }] }, options:{...baseOpts} });
 }
 
 function mkGroupBar(id, ds1, ds2, l1, l2, c1, c2) {
   const ctx = document.getElementById(id);
-  if (!ctx || inited.has(id)) return;
+  if (!ctx||inited.has(id)) return;
   inited.add(id);
-  ctx._ch = new Chart(ctx, {
-    type:'bar',
-    data:{ labels:MONTHS, datasets:[
-      {label:l1, data:ds1, backgroundColor:c1, borderRadius:3},
-      {label:l2, data:ds2, backgroundColor:c2, borderRadius:3}
-    ]},
-    options:{...baseOpts, plugins:{legend:{display:true, labels:{font:{size:10},color:NAV,boxWidth:10}}}}
-  });
+  ctx._ch = new Chart(ctx, { type:'bar', data:{ labels:MONTHS, datasets:[{label:l1,data:ds1,backgroundColor:c1,borderRadius:3},{label:l2,data:ds2,backgroundColor:c2,borderRadius:3}] }, options:{...baseOpts, plugins:{legend:{display:true,labels:{font:{size:10},color:NAV,boxWidth:10}}}} });
 }
 
 function highlightBar(plat, hi) {
   const map = {
     ig: [['ig-views',26,125,79],['ig-int',26,43,94],['ig-seg',26,43,94]],
-    p:  [['p-inv',201,123,42],['p-clics',26,125,79]],
+    p:  [['p-inv',201,123,42],['p-alc',26,125,79],['p-clics',26,43,94]],
     tt: [['tt-views',26,125,79],['tt-likes',26,43,94],['tt-seg',42,125,79]]
   };
   (map[plat]||[]).forEach(([id,r,g,b]) => {
     const ctx = document.getElementById(id);
-    if (ctx && ctx._ch) { ctx._ch.data.datasets[0].backgroundColor=barsRgba(hi,r,g,b); ctx._ch.update(); }
+    if (ctx&&ctx._ch) { ctx._ch.data.datasets[0].backgroundColor=barsRgba(hi,r,g,b); ctx._ch.update(); }
   });
 }
 
+const Q1 = ['Enero','Febrero','Marzo'];
 function initTrimCharts() {
-  mkBar('trim-ig-views',[128020,178418,228534],2,26,125,79);
-  mkBar('trim-ig-int',  [1347,2710,4300],      2,26,43,94);
-  mkBar('trim-tt-views',[18592,9342,65243],     2,26,125,79);
-  mkBar('trim-p-clics', [2192,1299,2725],       2,201,123,42);
+  mkBar('trim-ig-views',[128020,178418,228534], 2, 26,125,79,  Q1);
+  mkBar('trim-ig-int',  [1347,2710,4300],       2, 26,43,94,   Q1);
+  mkBar('trim-tt-views',[18592,9342,65243],      2, 26,125,79,  Q1);
+  mkBar('trim-p-clics', [2192,1299,2725],        2, 201,123,42, Q1);
 }
 
 function initMensualCharts() {
   const igHi=monthIdx[curMonth.ig], pHi=monthIdx[curMonth.p], ttHi=monthIdx[curMonth.tt];
-  mkBar('ig-views',[128020,178418,228534],igHi,26,125,79);
-  mkBar('ig-int',  [1347,2710,4300],      igHi,26,43,94);
-  mkLine('ig-reach',[73053,71585,65544],AMB);
-  mkBar('ig-seg',  [393,393,991],         igHi,26,43,94);
-  mkBar('p-inv',   [687926,158710,867607],pHi,201,123,42);
-  mkBar('p-clics', [2192,1299,2725],      pHi,26,125,79);
-  mkLine('p-ctr',  [1.96,0.69,2.20],GRN);
-  mkGroupBar('p-imp',[378424,246321,138853],[274098,174682,101568],'Impresiones','Alcance','rgba(26,43,94,0.75)','rgba(26,43,94,0.3)');
-  mkBar('tt-views',[18592,9342,65243],    ttHi,26,125,79);
-  mkBar('tt-likes',[580,533,1905],        ttHi,26,43,94);
-  mkBar('tt-seg',  [87,52,416],           ttHi,42,125,79);
-  mkGroupBar('tt-eng',[5,20,18],[5,7,11],'Shares','Comments','rgba(201,123,42,0.85)','rgba(26,43,94,0.5)');
+  mkBar('ig-views',[128020,178418,228534,301546,307807],igHi,26,125,79);
+  mkBar('ig-int',  [1347,2710,4300,2755,3617],        igHi,26,43,94);
+  mkLine('ig-reach',[73053,71585,65544,119478,90521],  AMB);
+  mkBar('ig-seg',  [393,393,991,627,845],            igHi,26,43,94);
+  mkBar('p-inv',   [687926,158710,867607,1139736,721168],pHi,201,123,42);
+  mkBar('p-alc',   [274098,174682,101568,387982,226491], pHi,26,125,79);
+  mkBar('p-clics', [2192,1299,2725,1920,2804],         pHi,26,43,94);
+  mkLine('p-ctr',  [1.96,0.69,2.20,0.37,0.89],        GRN);
+  mkBar('tt-views',[18592,9342,65243,57634],      ttHi,26,125,79);
+  mkBar('tt-likes',[580,533,1905,524],            ttHi,26,43,94);
+  mkBar('tt-seg',  [87,52,416,282],               ttHi,42,125,79);
+  mkGroupBar('tt-eng',[5,20,18,8],[5,7,11,1],'Shares','Comments','rgba(201,123,42,0.85)','rgba(26,43,94,0.5)');
   renderKPI('ig',igKPI[curMonth.ig]);
   renderKPI('p', pKPI[curMonth.p]);
   renderKPI('tt',ttKPI[curMonth.tt]);
   renderTopGrid('ig-top-grid','ig',curMonth.ig);
-  renderTopGrid('tt-top-grid','tt',curMonth.tt);
 }
+
+/* ─── FIDELIZACIÓN DATA ─── */
+const fidelData = {
+  mar: {
+    type: 'full',
+    periodo: 'Marzo 2026',
+    nota: '🚀 Primer mes del programa de fidelización Passtastic',
+    miembros:41, recurrentes:24, retorno:96.0,
+    cupones: { emitidos:42, canjeados:0, sinCanjear:30, expirados:10, pctExp:'23,8%', conversion:'57,1%', convertidos:24 },
+    visitas: { v1:1, v24:17, v5:7, total:25 },
+    demo: { muj:50, hom:50, topEdad:'24–29 años' }
+  },
+  abr: {
+    type: 'full',
+    periodo: 'Abril 2026',
+    nota: 'Segundo mes del programa',
+    miembros:50, recurrentes:37, retorno:97.4,
+    prevMiembros:41, prevRecurrentes:24, prevRetorno:96.0,
+    cupones: { emitidos:51, canjeados:0, sinCanjear:51, expirados:0, pctExp:'0%', conversion:'60,8%', convertidos:31 },
+    wifi: { semana7:140, promDiario:31, db:353, habituales:'23,7%' },
+    demo: { muj:61, hom:39, topEdad:'24–29 años',
+            edades:[['12–17','1,5%',1.5],['18–23','19,5%',19.5],['24–29','24,3%',24.3],['30–35','24,3%',24.3],['36–41','11,6%',11.6]],
+            ig: { muj:65.4, hom:34.6,
+                  edadesIG:[['18–24','4,7%',4.7],['25–34','31,1%',31.1],['35–44','40,4%',40.4],['45–54','17,6%',17.6],['55+','6,2%',6.2]],
+                  ciudades:[['San José','13,2%',100],['La Unión, Cartago','4,7%',35],['Cartago','3,5%',26],['Curridabat','2,6%',19]] } },
+    dispositivos: [{v:'252',l:'Apple',p:'71%'},{v:'57',l:'Windows',p:'16%'},{v:'44',l:'Android',p:'12%'}]
+  },
+  may: {
+    type: 'full',
+    periodo: 'Mayo 2026',
+    nota: '📈 Tercer mes completo · Retorno al 100% · DB WiFi: 528 clientes',
+    miembros:92, recurrentes:64, retorno:100.0,
+    prevMiembros:50, prevRecurrentes:37, prevRetorno:97.4,
+    cupones: { emitidos:94, canjeados:0, sinCanjear:94, expirados:0, pctExp:'0%', conversion:'55,3%', convertidos:52 },
+    wifi: { db:528, habituales:'—' },
+    demo: { muj:52, hom:48, topEdad:'30–35 años',
+            edades:[['12–17','0,97%',0.97],['18–23','15,06%',15.06],['24–29','21,62%',21.62],['30–35','22,59%',22.59],['36–41','19,88%',19.88]],
+            ig: { muj:65.6, hom:34.4,
+                  edadesIG:[['18–24','4,7%',4.7],['25–34','31,3%',31.3],['35–44','40,4%',40.4],['45–54','17,6%',17.6],['55+','6,0%',6.0]],
+                  ciudades:[['San José','13,0%',100],['La Unión, Cartago','4,3%',33],['Cartago','3,9%',30],['Curridabat','2,5%',19],['Mercedes N. Heredia','2,5%',19]] } },
+    dispositivos: [{v:'369',l:'Apple',p:'70%'},{v:'93',l:'Android',p:'18%'},{v:'66',l:'Windows',p:'13%'}],
+    acumulado: { miembros:186, recurrentes:108, retorno:98.2, cupones:189, expirados:10, conversion:'57,7%', convertidos:109 }
+  }
+};
+
+let curFidelMonth = 'mar';
+
+function showFidelTab(id, btn) {
+  document.querySelectorAll('#view-fidel .pblock').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('#view-fidel .pill').forEach(b => b.classList.remove('active'));
+  document.getElementById('fidel-'+id).classList.add('active');
+  btn.classList.add('active');
+  if (id==='pass') renderFidel(curFidelMonth);
+  if (id==='fiwex') initFiwexCharts();
+}
+
+function initFiwexCharts() {
+  const c1 = document.getElementById('fiwex-conn');
+  if (c1 && !inited.has('fiwex-conn')) {
+    inited.add('fiwex-conn');
+    c1._ch = new Chart(c1, { type:'bar',
+      data:{ labels:['Enero','Febrero','Marzo','Abril*','Mayo'],
+        datasets:[{ data:[84,523,615,930,528],
+          backgroundColor:['rgba(26,43,94,0.15)','rgba(26,43,94,0.35)','rgba(26,43,94,0.6)','rgba(201,123,42,1)','rgba(42,125,79,1)'],
+          borderRadius:4 }] },
+      options:{...baseOpts} });
+  }
+  const c2 = document.getElementById('fiwex-cli');
+  if (c2 && !inited.has('fiwex-cli')) {
+    inited.add('fiwex-cli');
+    c2._ch = new Chart(c2, { type:'line',
+      data:{ labels:['Ene','Feb','Mar','Abr','May'],
+        datasets:[{
+          label:'DB acumulada',
+          data:[60,368,393,353,528],
+          borderColor:'#2a7d4f', backgroundColor:'rgba(42,125,79,0.12)',
+          fill:true, tension:0.35, pointBackgroundColor:'#2a7d4f', pointRadius:5
+        }] },
+      options:{...baseOpts} });
+  }
+}
+
+let fidelChartInst = null;
+let fidelGrowthChart = null;
+
+function demoBar(label, pct, pctStr, cls='') {
+  return `<div class="demo-bar"><div class="db-label"><span>${label}</span><span>${pctStr}</span></div><div class="db-track"><div class="db-fill ${cls}" style="width:${pct}%"></div></div></div>`;
+}
+
+function renderFidel(m) {
+  const d = fidelData[m];
+  const cont = document.getElementById('fidel-content');
+  if (!cont) return;
+
+  // Destroy previous chart if any
+  if (fidelChartInst) { fidelChartInst.destroy(); fidelChartInst = null; }
+
+  let html = '';
+
+  // Header
+  html += `<div class="fidel-header" style="margin-bottom:14px;">
+    <div class="fh-brand">Passtastic · Programa de Fidelización</div>
+    <div class="fh-period">${d.periodo}</div>
+  </div>`;
+
+  if (d.nota) {
+    const isLaunch = d.nota.includes('🚀');
+    const notaBg = isLaunch ? 'background:#2a7d4f;color:#f0ece4;' : 'background:rgba(201,123,42,0.12);color:#c97b2a;border:1px solid rgba(201,123,42,0.25);';
+    html += `<div style="${notaBg}border-radius:8px;padding:12px 18px;font-size:13px;margin-bottom:16px;">${d.nota}</div>`;
+  }
+
+  if (d.type === 'wifi') {
+    // WiFi-only months
+    html += `<div class="slabel">Actividad en el local</div>
+    <div class="krow" style="grid-template-columns:repeat(4,1fr);margin-bottom:20px;">
+      <div class="kcard up"><div class="kval">${d.wifi.total}</div><div class="klbl">Conexiones WiFi</div><div class="kchg chg-neu">Total del mes</div></div>
+      <div class="kcard up"><div class="kval">${d.wifi.clientes}</div><div class="klbl">Clientes únicos</div><div class="kchg chg-neu">Identificados por WiFi</div></div>
+      <div class="kcard"><div class="kval">${d.wifi.nuevos}</div><div class="klbl">Nuevos en DB</div><div class="kchg chg-neu">Primera visita registrada</div></div>
+      <div class="kcard"><div class="kval">${d.wifi.promDiario}</div><div class="klbl">Promedio diario</div><div class="kchg chg-neu">Pico: ${d.wifi.horario}</div></div>
+    </div>`;
+
+    if (d.email) {
+      html += `<div class="fidel-section" style="margin-bottom:14px;"><h3>Email marketing del mes</h3>
+        <div class="krow k3">
+          <div class="kcard"><div class="kval">${d.email.abiertos}</div><div class="klbl">Abiertos</div><div class="kchg chg-neu">"${d.email.asunto}"</div></div>
+          <div class="kcard"><div class="kval">${d.email.clicks}</div><div class="klbl">Clicks</div><div class="kchg chg-neu">CTR: ${((d.email.clicks/d.email.abiertos)*100).toFixed(1)}%</div></div>
+          <div class="kcard up"><div class="kval">${d.flyer.vistas}</div><div class="klbl">Vistas flyer WiFi</div><div class="kchg chg-up">${d.flyer.unicas} únicas</div></div>
+        </div></div>`;
+    }
+
+    html += `<div class="fidel-section"><h3>Audiencia WiFi</h3>
+      <div class="demo-row"><div>
+        <div style="font-size:11px;text-transform:uppercase;letter-spacing:2px;opacity:.4;margin-bottom:14px;">Género</div>
+        ${demoBar('Mujeres', d.demo.muj, d.demo.muj+'%')}
+        ${demoBar('Hombres', d.demo.hom, d.demo.hom+'%','green')}
+        <div style="font-size:11px;text-transform:uppercase;letter-spacing:2px;opacity:.4;margin-bottom:14px;margin-top:22px;">Edad más frecuente</div>
+        <div style="font-size:22px;font-weight:bold;">${d.demo.topEdad}</div>
+      </div><div>
+        <div style="font-size:11px;text-transform:uppercase;letter-spacing:2px;opacity:.4;margin-bottom:14px;">Países de origen</div>
+        ${d.demo.paises.map(([p,n],i) => demoBar(p, Math.round((parseInt(n)/parseInt(d.demo.paises[0][1]))*100), n+' clientes', i===0?'':'amber')).join('')}
+      </div></div></div>`;
+
+  } else {
+    // Full loyalty months (Marzo + Abril)
+    const hasComp = d.prevMiembros !== undefined;
+    const deltaMie = hasComp ? d.miembros-d.prevMiembros : 0;
+    const deltaRec = hasComp ? d.recurrentes-d.prevRecurrentes : 0;
+    const pctMie = hasComp ? Math.round((deltaMie/d.prevMiembros)*100) : 0;
+    const pctRec = hasComp ? Math.round((deltaRec/d.prevRecurrentes)*100) : 0;
+
+    // Growth velocity row (April only)
+    if (hasComp) {
+      const prevLabel = d.prevMiembros === 41 ? 'marzo' : d.prevMiembros === 50 ? 'abril' : 'mes ant.';
+      html += `<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;margin-bottom:16px;">
+        <div style="background:#1a2b5e;color:#f0ece4;border-radius:8px;padding:18px;text-align:center;">
+          <div style="font-size:36px;font-weight:bold;color:#c97b2a;">${d.miembros}</div>
+          <div style="font-size:10px;text-transform:uppercase;letter-spacing:1.5px;opacity:.6;margin-top:4px;">Nuevos miembros</div>
+          <div style="font-size:12px;color:#2a7d4f;margin-top:8px;">+${deltaMie} (+${pctMie}%) vs ${prevLabel}</div>
+        </div>
+        <div style="background:#1a2b5e;color:#f0ece4;border-radius:8px;padding:18px;text-align:center;">
+          <div style="font-size:36px;font-weight:bold;color:#c97b2a;">${d.recurrentes}</div>
+          <div style="font-size:10px;text-transform:uppercase;letter-spacing:1.5px;opacity:.6;margin-top:4px;">Recurrentes</div>
+          <div style="font-size:12px;color:#2a7d4f;margin-top:8px;">+${deltaRec} (+${pctRec}%) vs ${prevLabel}</div>
+        </div>
+        <div style="background:#1a2b5e;color:#f0ece4;border-radius:8px;padding:18px;text-align:center;">
+          <div style="font-size:36px;font-weight:bold;color:#2a7d4f;">${d.retorno}%</div>
+          <div style="font-size:10px;text-transform:uppercase;letter-spacing:1.5px;opacity:.6;margin-top:4px;">Tasa de retorno</div>
+          <div style="font-size:12px;color:#2a7d4f;margin-top:8px;">+${(d.retorno-d.prevRetorno).toFixed(1)}% vs ${prevLabel}</div>
+        </div>
+        <div style="background:white;border-radius:8px;padding:18px;text-align:center;border-top:3px solid #c0392b;">
+          <div style="font-size:36px;font-weight:bold;color:#c0392b;">0</div>
+          <div style="font-size:10px;text-transform:uppercase;letter-spacing:1.5px;opacity:.5;margin-top:4px;">Cupones canjeados</div>
+          <div style="font-size:12px;color:#c0392b;margin-top:8px;">de ${d.cupones.emitidos} emitidos · ¡activar ya!</div>
+        </div>
+      </div>`;
+
+      // Members growth chart
+      const isAbr = d.prevMiembros === 41;
+      const growthTitle = isAbr ? 'Crecimiento del programa · Marzo → Abril' : 'Crecimiento del programa · Marzo → Abril → Mayo';
+      const growthLabels = isAbr ? ['Marzo','Abril'] : ['Marzo','Abril','Mayo'];
+      const growthData = isAbr ? [41,50] : [41,50,92];
+      const totalAcum = isAbr ? 91 : (d.acumulado ? d.acumulado.miembros : 183);
+      const retLabel = isAbr ? '37 de 91 miembros volvieron en abril' : `${d.recurrentes} de ${totalAcum} volvieron en mayo`;
+      const retPct = isAbr ? '40,7%' : Math.round((d.recurrentes/totalAcum)*100)+'%';
+      const acumMeses = isAbr ? '2' : '3';
+      html += `<div class="fidel-section" style="margin-bottom:14px;">
+        <h3>${growthTitle}</h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+          <div style="height:140px;position:relative;"><canvas id="fidel-growth-chart"></canvas></div>
+          <div style="display:flex;flex-direction:column;justify-content:center;gap:10px;">
+            <div style="background:#f0ece4;border-radius:8px;padding:12px 16px;">
+              <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;opacity:.4;margin-bottom:4px;">Nuevos miembros acumulados</div>
+              <div style="font-size:28px;font-weight:bold;">${totalAcum}</div>
+              <div style="font-size:12px;color:#2a7d4f;margin-top:2px;">en ${acumMeses} meses de programa</div>
+            </div>
+            <div style="background:#f0ece4;border-radius:8px;padding:12px 16px;">
+              <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;opacity:.4;margin-bottom:4px;">Retención activa</div>
+              <div style="font-size:28px;font-weight:bold;">${retPct}</div>
+              <div style="font-size:12px;color:#2a7d4f;margin-top:2px;">${retLabel}</div>
+            </div>
+          </div>
+        </div>
+      </div>`;
+      // store growth data for chart render
+      window._fidelGrowthLabels = growthLabels;
+      window._fidelGrowthData = growthData;
+    } else {
+      // March — simple KPI row
+      html += `<div class="krow k3" style="margin-bottom:16px;">
+        <div class="kcard"><div class="kval">${d.miembros}</div><div class="klbl">Nuevos Miembros</div><div class="kchg chg-neu">Primer mes del programa</div></div>
+        <div class="kcard"><div class="kval">${d.recurrentes}</div><div class="klbl">Clientes Recurrentes</div><div class="kchg chg-neu">Primera medición</div></div>
+        <div class="kcard up"><div class="kval">${d.retorno}%</div><div class="klbl">Tasa de Retorno</div><div class="kchg chg-up">Primera medición</div></div>
+      </div>`;
+    }
+
+    // Cupones — visual gauge
+    const pctUsed = d.cupones.sinCanjear > 0 ? Math.round((d.cupones.sinCanjear/d.cupones.emitidos)*100) : 0;
+    html += `<div class="fidel-section" style="margin-bottom:14px;"><h3>Rendimiento de Cupones</h3>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:center;">
+        <div>
+          <div class="cupon-grid">
+            <div class="cupon-card"><div class="cc-val">${d.cupones.emitidos}</div><div class="cc-lbl">Emitidos</div></div>
+            <div class="cupon-card" style="border:1.5px solid #2a7d4f;"><div class="cc-val" style="color:#2a7d4f;">0</div><div class="cc-lbl">Canjeados</div></div>
+            <div class="cupon-card"><div class="cc-val">${d.cupones.sinCanjear}</div><div class="cc-lbl">Sin Canjear</div></div>
+            ${d.cupones.expirados > 0
+              ? `<div class="cupon-card" style="border:1.5px solid #c0392b;"><div class="cc-val" style="color:#c0392b;">${d.cupones.expirados}</div><div class="cc-lbl">Expirados</div></div>`
+              : `<div class="cupon-card"><div class="cc-val" style="font-size:20px;">${d.cupones.conversion}</div><div class="cc-lbl">Conv. Fidelización</div></div>`
+            }
+          </div>
+        </div>
+        <div>
+          <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;opacity:.4;margin-bottom:10px;">Estado de activación</div>
+          <div style="margin-bottom:8px;">
+            <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span>Canjeados</span><span style="color:#2a7d4f;font-weight:bold;">0%</span></div>
+            <div class="db-track" style="height:14px;"><div style="width:0%;height:14px;background:#2a7d4f;border-radius:4px;"></div></div>
+          </div>
+          <div style="margin-bottom:8px;">
+            <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span>Sin canjear (activos)</span><span style="color:#c97b2a;font-weight:bold;">${pctUsed}%</span></div>
+            <div class="db-track" style="height:14px;"><div style="width:${pctUsed}%;height:14px;background:#c97b2a;border-radius:4px;"></div></div>
+          </div>
+          ${d.cupones.expirados > 0 ? `<div style="margin-bottom:8px;">
+            <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span>Expirados</span><span style="color:#c0392b;font-weight:bold;">${d.cupones.pctExp}</span></div>
+            <div class="db-track" style="height:14px;"><div style="width:${parseFloat(d.cupones.pctExp)}%;height:14px;background:#c0392b;border-radius:4px;"></div></div>
+          </div>` : ''}
+          <div style="font-size:12px;color:#c0392b;margin-top:10px;line-height:1.5;">${d.cupones.convertidos} clientes al programa · 0 activaciones — la mayor oportunidad del mes.</div>
+        </div>
+      </div>
+    </div>`;
+
+    // Visitas chart (Marzo)
+    if (d.visitas) {
+      html += `<div class="fidel-section" style="margin-bottom:14px;">
+        <h3>Frecuencia de Visitas · distribución de clientes</h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:center;">
+          <div style="height:150px;position:relative;"><canvas id="fidel-visitas-chart"></canvas></div>
+          <div>
+            <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;opacity:.4;margin-bottom:12px;">Lo que dice el dato</div>
+            <div style="font-size:13px;line-height:1.7;opacity:.75;">El <strong>68%</strong> de los clientes tiene 2–4 visitas — están en la etapa más valiosa para convertirlos a habituales. Con una mecánica de "doble sello" en la 5ta visita, ese 68% puede moverse a la siguiente etapa de fidelización.</div>
+            <div style="margin-top:12px;background:#f0ece4;border-radius:6px;padding:10px 14px;font-size:12px;"><strong>Total analizado:</strong> ${d.visitas.total} clientes</div>
+          </div>
+        </div>
+      </div>`;
+    }
+
+    // WiFi (Abril)
+    if (d.wifi) {
+      html += `<div class="fidel-section" style="margin-bottom:14px;"><h3>Tráfico del local · Fiwex WiFi</h3>
+        <div class="wifi-grid">
+          <div class="wifi-card"><div class="wc-val">${d.wifi.semana7}</div><div class="wc-lbl">Conex. últimos 7 días</div></div>
+          <div class="wifi-card"><div class="wc-val">${d.wifi.promDiario}</div><div class="wc-lbl">Promedio diario</div></div>
+          <div class="wifi-card"><div class="wc-val">${d.wifi.db}</div><div class="wc-lbl">Clientes en base WiFi</div></div>
+          <div class="wifi-card"><div class="wc-val">${d.wifi.habituales}</div><div class="wc-lbl">Habituales (5+ visitas)</div></div>
+        </div>
+      </div>`;
+    }
+
+    // Demographics
+    if (d.demo) {
+      let demoHtml = `<div class="fidel-section" style="margin-bottom:14px;"><h3>Demografía de clientes · Passtastic</h3><div class="demo-row"><div>
+        <div style="font-size:11px;text-transform:uppercase;letter-spacing:2px;opacity:.4;margin-bottom:14px;">Género</div>
+        ${demoBar('Mujeres', d.demo.muj, d.demo.muj+'%')}
+        ${demoBar('Hombres', d.demo.hom, d.demo.hom+'%','green')}
+        <div style="font-size:11px;text-transform:uppercase;letter-spacing:2px;opacity:.4;margin-bottom:14px;margin-top:22px;">Edad más frecuente</div>
+        <div style="font-size:22px;font-weight:bold;">${d.demo.topEdad}</div>`;
+
+      if (d.demo.edades) {
+        demoHtml += `<div style="font-size:11px;text-transform:uppercase;letter-spacing:2px;opacity:.4;margin-bottom:14px;margin-top:22px;">Distribución de edades</div>`;
+        d.demo.edades.forEach(([r,ps,pv]) => { demoHtml += demoBar(r,pv,ps,'amber'); });
+      }
+      demoHtml += `</div>`;
+
+      if (d.demo.ig) {
+        demoHtml += `<div>
+          <div style="font-size:11px;text-transform:uppercase;letter-spacing:2px;opacity:.4;margin-bottom:14px;">Seguidores Instagram</div>
+          ${demoBar('Mujeres', d.demo.ig.muj, d.demo.ig.muj+'%')}
+          ${demoBar('Hombres', d.demo.ig.hom, d.demo.ig.hom+'%','green')}
+          <div style="font-size:11px;text-transform:uppercase;letter-spacing:2px;opacity:.4;margin-bottom:14px;margin-top:22px;">Edades seguidores IG</div>`;
+        d.demo.ig.edadesIG.forEach(([r,ps,pv]) => { demoHtml += demoBar(r,pv,ps); });
+        demoHtml += `<div style="font-size:11px;text-transform:uppercase;letter-spacing:2px;opacity:.4;margin-bottom:14px;margin-top:22px;">Top ciudades</div>`;
+        d.demo.ig.ciudades.forEach(([c,ps,pv]) => { demoHtml += demoBar(c,pv,ps,'amber'); });
+        demoHtml += `</div>`;
+      } else {
+        demoHtml += `<div><div style="font-size:11px;text-transform:uppercase;letter-spacing:2px;opacity:.4;margin-bottom:14px;">Nota</div><div style="font-size:13px;opacity:.5;line-height:1.7;">Demografía detallada por edades y ciudades disponible desde Abril 2026.</div></div>`;
+      }
+
+      demoHtml += `</div></div>`;
+      html += demoHtml;
+    }
+
+    // Devices
+    if (d.dispositivos) {
+      html += `<div class="fidel-section"><h3>Dispositivos · clientes WiFi/Passtastic</h3>
+        <div class="krow k3">
+          ${d.dispositivos.map(dv => `<div class="kcard"><div class="kval">${dv.v}</div><div class="klbl">${dv.l} · ${dv.p}</div><div class="kchg chg-neu">${dv.l==='Apple'?'Dispositivo predominante':'—'}</div></div>`).join('')}
+        </div></div>`;
+    }
+
+    // Acumulado Passtastic (Mayo only)
+    if (d.acumulado) {
+      const ac = d.acumulado;
+      html += `<div class="fidel-section" style="background:rgba(26,43,94,0.04);border-left:3px solid #1a2b5e;">
+        <h3>Totales acumulados del programa · Marzo–Mayo 2026</h3>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:12px;">
+          <div style="text-align:center;"><div style="font-size:30px;font-weight:bold;color:#1a2b5e;">${ac.miembros}</div><div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;opacity:.4;margin-top:4px;">Nuevos miembros total</div></div>
+          <div style="text-align:center;"><div style="font-size:30px;font-weight:bold;color:#2a7d4f;">${ac.recurrentes}</div><div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;opacity:.4;margin-top:4px;">Clientes recurrentes total</div></div>
+          <div style="text-align:center;"><div style="font-size:30px;font-weight:bold;color:#c97b2a;">${ac.retorno}%</div><div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;opacity:.4;margin-top:4px;">Tasa retorno histórica</div></div>
+          <div style="text-align:center;"><div style="font-size:30px;font-weight:bold;color:#c0392b;">${ac.cupones}</div><div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;opacity:.4;margin-top:4px;">Cupones emitidos total · 0 canjeados</div></div>
+        </div>
+        <div style="margin-top:14px;font-size:13px;background:rgba(192,57,43,0.07);border-radius:6px;padding:10px 14px;border-left:3px solid #c0392b;">
+          <strong>🚨 Alerta persistente:</strong> ${ac.cupones} cupones emitidos en 3 meses y <strong>0 canjeados</strong>. ${ac.convertidos} clientes convertidos al programa (${ac.conversion}). El programa retiene clientes pero los beneficios nunca se activaron — es la mayor oportunidad de Q2.
+        </div>
+      </div>`;
+    }
+  }
+
+  cont.innerHTML = html;
+
+  // Draw visitas chart if Marzo
+  if (d.visitas) {
+    const ctx = document.getElementById('fidel-visitas-chart');
+    if (ctx) {
+      fidelChartInst = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['1 visita','2–4 visitas','5+ visitas'],
+          datasets: [{ data: [d.visitas.v1, d.visitas.v24, d.visitas.v5],
+            backgroundColor: ['rgba(26,43,94,0.25)','rgba(26,125,79,0.85)','rgba(201,123,42,0.85)'],
+            borderRadius: 4 }]
+        },
+        options: { responsive:true, maintainAspectRatio:false, animation:false,
+          plugins:{ legend:{display:false} },
+          scales:{
+            x:{ grid:{display:false}, ticks:{font:{size:11},color:'#1a2b5e'} },
+            y:{ grid:{color:'rgba(26,43,94,0.07)'}, ticks:{font:{size:10},color:'#1a2b5e'}, beginAtZero:true }
+          }
+        }
+      });
+    }
+  }
+
+  // Draw growth comparison chart (dynamic labels/data from window)
+  if (fidelGrowthChart) { fidelGrowthChart.destroy(); fidelGrowthChart = null; }
+  const ctxG = document.getElementById('fidel-growth-chart');
+  const growthLabels = window._fidelGrowthLabels || ['Marzo','Abril'];
+  const growthMiembros = window._fidelGrowthData || [d.prevMiembros||0, d.miembros];
+  // build recurrentes array matching length
+  const recArr = growthLabels.length === 3
+    ? [d.prevRecurrentes||0, 37, d.recurrentes]
+    : [d.prevRecurrentes||0, d.recurrentes];
+  if (ctxG) {
+    fidelGrowthChart = new Chart(ctxG, {
+      type: 'bar',
+      data: {
+        labels: growthLabels,
+        datasets: [
+          {
+            label: 'Nuevos miembros',
+            data: growthMiembros,
+            backgroundColor: 'rgba(201,123,42,0.85)',
+            borderRadius: 4
+          },
+          {
+            label: 'Recurrentes',
+            data: recArr,
+            backgroundColor: 'rgba(42,125,79,0.85)',
+            borderRadius: 4
+          }
+        ]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false, animation: false,
+        plugins: {
+          legend: {
+            display: true,
+            labels: { font: { size: 10 }, color: '#1a2b5e', boxWidth: 10, padding: 8 }
+          }
+        },
+        scales: {
+          x: { grid: { display: false }, ticks: { font: { size: 11 }, color: '#1a2b5e' } },
+          y: { grid: { color: 'rgba(26,43,94,0.07)' }, ticks: { font: { size: 10 }, color: '#1a2b5e' }, beginAtZero: true }
+        }
+      }
+    });
+  }
+}
+
+function setFidelMonth(m, btn) {
+  curFidelMonth = m;
+  document.querySelectorAll('#view-fidel .mpill').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  if (fidelGrowthChart) { fidelGrowthChart.destroy(); fidelGrowthChart = null; }
+  renderFidel(m);
+}
+
+function setConclusionMonth(m, btn) {
+  document.querySelectorAll('#view-conclusiones .pblock').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('#view-conclusiones .mpill').forEach(b => b.classList.remove('active'));
+  document.getElementById('concl-'+m).classList.add('active');
+  btn.classList.add('active');
+}
+
+/* ─── INIT ─── */
+document.addEventListener('DOMContentLoaded', () => {
+  initGoalDonuts();
+  renderFidel('mar'); // pre-render so switching to fidel is instant
+});
 </script>
+
 </body>
 </html>
