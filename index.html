@@ -192,14 +192,14 @@ footer { text-align:center; margin-top:60px; padding:24px; font-size:11px; opaci
     <div class="brand">☕ Libertario Coffee Co. & Roasters · Costa Rica</div>
     <div class="title" style="margin-top:4px;">Dashboard de Marketing 2026</div>
   </div>
-  <div class="date-badge">Enero – Abril · Q1–Q2</div>
+  <div class="date-badge">Enero – Mayo 2026</div>
 </div>
 
 <nav class="nav">
   <button class="nav-btn active" onclick="showView('anual',this)">KPIs Anual</button>
   <button class="nav-btn" onclick="showView('mensual',this)">Mensual</button>
   <button class="nav-btn" onclick="showView('fidel',this)">Fidelización</button>
-  <button class="nav-btn" onclick="showView('trim',this)">Trimestral Q1</button>
+  <button class="nav-btn" onclick="showView('trim',this)">Trimestral</button>
   <button class="nav-btn" onclick="showView('conclusiones',this)">Conclusiones</button>
 </nav>
 
@@ -349,6 +349,12 @@ footer { text-align:center; margin-top:60px; padding:24px; font-size:11px; opaci
 
 <!-- ═══════ TRIMESTRAL ═══════ -->
 <div id="view-trim" class="view">
+  <div class="tab-row" style="margin-bottom:20px;">
+    <button class="pill active" onclick="showTrimTab('q1',this)">Q1 · Enero–Marzo ✓</button>
+    <button class="pill" onclick="showTrimTab('q2',this)">Q2 · Abril–Junio</button>
+  </div>
+
+  <div id="trim-q1" class="pblock active">
   <div style="font-size:12px;opacity:.5;margin-bottom:18px;">Resumen de Q1 cerrado · Enero – Marzo 2026 · 3 meses completos</div>
   <div class="slabel">Wins del Q1</div>
   <div class="wins-grid">
@@ -421,6 +427,30 @@ footer { text-align:center; margin-top:60px; padding:24px; font-size:11px; opaci
       </div>
     </div>
   </div>
+  </div><!-- /trim-q1 -->
+
+  <div id="trim-q2" class="pblock">
+    <div style="background:white;border-radius:16px;padding:40px 32px;text-align:center;box-shadow:0 2px 16px rgba(26,43,94,.07);margin-top:10px;">
+      <div style="font-size:36px;margin-bottom:16px;">📊</div>
+      <div style="font-size:18px;font-weight:bold;margin-bottom:8px;">Q2 en curso · Cierra junio 2026</div>
+      <div style="font-size:13px;opacity:.55;line-height:1.6;max-width:480px;margin:0 auto 24px;">El cierre de Q2 (Abril–Junio) estará disponible al finalizar junio 2026. Este trimestre incluye los primeros meses con Meta Ads Manager, la reactivación de TikTok y el despliegue del flujo de canje de Passtastic.</div>
+      <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
+        <div style="background:#edf0f8;border-radius:12px;padding:16px 24px;min-width:120px;">
+          <div style="font-size:22px;font-weight:bold;">3/3</div>
+          <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;opacity:.4;margin-top:4px;">Meses abiertos</div>
+        </div>
+        <div style="background:#edf0f8;border-radius:12px;padding:16px 24px;min-width:120px;">
+          <div style="font-size:22px;font-weight:bold;">Jun 30</div>
+          <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;opacity:.4;margin-top:4px;">Cierre del trimestre</div>
+        </div>
+        <div style="background:#edf0f8;border-radius:12px;padding:16px 24px;min-width:120px;">
+          <div style="font-size:22px;font-weight:bold;">11.934</div>
+          <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;opacity:.4;margin-top:4px;">Seguidores IG actuales</div>
+        </div>
+      </div>
+    </div>
+  </div><!-- /trim-q2 -->
+
 </div>
 
 <!-- ═══════ MENSUAL ═══════ -->
@@ -512,6 +542,7 @@ footer { text-align:center; margin-top:60px; padding:24px; font-size:11px; opaci
       <button class="mpill" onclick="setMonth('tt','feb',this)">Febrero</button>
       <button class="mpill" onclick="setMonth('tt','mar',this)">Marzo</button>
       <button class="mpill" onclick="setMonth('tt','abr',this)">Abril</button>
+      <button class="mpill" onclick="setMonth('tt','may',this)">Mayo</button>
     </div>
     <div class="krow k4">
       <div class="kcard" id="tt-k0"><div class="kval" id="tt-k0v"></div><div class="klbl" id="tt-k0l"></div><div class="kchg" id="tt-k0c"></div></div>
@@ -571,7 +602,7 @@ footer { text-align:center; margin-top:60px; padding:24px; font-size:11px; opaci
     </div>
 
     <!-- Monthly tiles -->
-    <div class="krow" style="grid-template-columns:repeat(4,1fr);margin-bottom:14px;">
+    <div class="krow" style="grid-template-columns:repeat(5,1fr);margin-bottom:14px;">
       <div class="kcard" style="border-top-color:#1a2b5e;border-top-width:3px;border-top-style:solid;">
         <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;opacity:.35;margin-bottom:10px;">Enero · Base</div>
         <div class="kval" style="font-size:22px;">84</div><div class="klbl">Conexiones WiFi</div>
@@ -591,6 +622,11 @@ footer { text-align:center; margin-top:60px; padding:24px; font-size:11px; opaci
         <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;opacity:.35;margin-bottom:10px;">Abril · est. ↑</div>
         <div class="kval" style="font-size:22px;">~930</div><div class="klbl">Conexiones WiFi</div>
         <div class="kchg chg-up">~51% · 31 conexiones/día prom.</div>
+      </div>
+      <div class="kcard up">
+        <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;opacity:.35;margin-bottom:10px;">Mayo · DB total</div>
+        <div class="kval" style="font-size:22px;">528</div><div class="klbl">Clientes en DB WiFi</div>
+        <div class="kchg chg-up">+50% vs abril · acumulado histórico</div>
       </div>
     </div>
 
@@ -742,7 +778,7 @@ footer { text-align:center; margin-top:60px; padding:24px; font-size:11px; opaci
     <button class="mpill" onclick="setConclusionMonth('mar',this)">Marzo</button>
     <button class="mpill" onclick="setConclusionMonth('abr',this)">Abril</button>
     <button class="mpill" onclick="setConclusionMonth('mayo',this)">Mayo</button>
-    <button class="mpill" onclick="setConclusionMonth('junio',this)" style="border-color:rgba(26,43,94,.35);font-weight:bold;">Plan Junio ›</button>
+    <button id="mpill-junio" class="mpill" onclick="setConclusionMonth('junio',this)" style="border-color:rgba(26,43,94,.35);font-weight:bold;">Plan Junio ›</button>
   </div>
 
   <!-- ══ ENERO ══ -->
@@ -854,8 +890,29 @@ footer { text-align:center; margin-top:60px; padding:24px; font-size:11px; opaci
       <div class="kcard up"><div class="kval">528</div><div class="klbl">Clientes DB Fiwex</div><div class="kchg chg-up">+50% vs abril</div></div>
       <div class="kcard down"><div class="kval">0</div><div class="klbl">Posts TikTok</div><div class="kchg chg-down">Mes inactivo</div></div>
     </div>
-    <div style="background:rgba(26,43,94,0.05);border-radius:10px;padding:16px 20px;font-size:13px;line-height:1.8;margin-bottom:14px;">
+    <div style="background:rgba(26,43,94,0.05);border-radius:10px;padding:16px 20px;font-size:13px;line-height:1.8;margin-bottom:20px;">
       <strong>Pauta mayo:</strong> "Velo Lanzamiento" fue la campaña más eficiente (CTR 7,73%, CPC ₡108) — generó el 52,8% de todos los clics. "Colores de Comida" tuvo CTR 0,06% y CPC ₡2.394. La diferencia entre una campaña bien elegida y una mal elegida es enorme.
+    </div>
+
+    <div style="border-left:3px solid #c97b2a;padding:14px 20px;background:white;border-radius:0 12px 12px 0;box-shadow:0 2px 12px rgba(26,43,94,.06);margin-bottom:8px;">
+      <div style="font-size:10px;letter-spacing:3px;text-transform:uppercase;opacity:.4;margin-bottom:12px;">Plan propuesto → Junio 2026</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">
+        <div>
+          <div style="font-size:11px;font-weight:bold;margin-bottom:6px;">📸 Instagram</div>
+          <div style="font-size:12px;opacity:.7;line-height:1.6;">Mantener flujo de posteo + UGC + aumentar posts pauteados desde Ads Manager (meta: llegar a 12.000 seguidores)</div>
+        </div>
+        <div>
+          <div style="font-size:11px;font-weight:bold;margin-bottom:6px;">🎵 TikTok</div>
+          <div style="font-size:12px;opacity:.7;line-height:1.6;">Reactivar canal inactivo: 2 posts/semana (carrusel + Reel), peso en formato video</div>
+        </div>
+        <div>
+          <div style="font-size:11px;font-weight:bold;margin-bottom:6px;">☕ Passtastic</div>
+          <div style="font-size:12px;opacity:.7;line-height:1.6;">1) Ops define flujo de canje en caja · 2) Email segmentado por fases de puntos (186 miembros)</div>
+        </div>
+      </div>
+      <div style="margin-top:12px;text-align:right;">
+        <button onclick="document.querySelectorAll('#view-conclusiones .mpill').forEach(b=>b.classList.remove('active'));document.querySelectorAll('#view-conclusiones .pblock').forEach(b=>b.classList.remove('active'));document.getElementById('concl-junio').classList.add('active');document.getElementById('mpill-junio').classList.add('active');" style="background:#1a2b5e;color:#f0ece4;border:none;border-radius:8px;padding:8px 18px;font-size:11px;letter-spacing:1px;cursor:pointer;">Ver plan completo →</button>
+      </div>
     </div>
   </div>
 
@@ -917,12 +974,12 @@ footer { text-align:center; margin-top:60px; padding:24px; font-size:11px; opaci
       </div>
       <div class="plan-body">
         <div class="plan-kpis">
-          <div class="plan-kpi"><div class="pk-val">189</div><div class="pk-lbl">Cupones emitidos (3 meses)</div></div>
+          <div class="plan-kpi"><div class="pk-val">186</div><div class="pk-lbl">Miembros acumulados</div></div>
+          <div class="plan-kpi"><div class="pk-val">189</div><div class="pk-lbl">Cupones emitidos</div></div>
           <div class="plan-kpi"><div class="pk-val">0</div><div class="pk-lbl">Canjeados</div></div>
-          <div class="plan-kpi"><div class="pk-val">528</div><div class="pk-lbl">Clientes en DB</div></div>
         </div>
-        <div class="plan-action"><div class="pa-dot" style="background:#c0392b;"></div><div><strong>Coordinación con Operaciones (paso previo)</strong> — definir cómo el cliente sabe cuántos puntos tiene y cómo se aplica el canje en caja. Sin este proceso claro, ninguna campaña resuelve el problema.</div></div>
-        <div class="plan-action"><div class="pa-dot" style="background:#1a2b5e;"></div><div><strong>Campaña de email por fases de puntos</strong> — segmentar la base de 528 clientes según puntos acumulados y enviar mensajes diferenciados. No mandar el mismo mensaje a todos.</div></div>
+        <div class="plan-action"><div class="pa-dot" style="background:#c0392b;"></div><div><strong>Coordinación con Operaciones (paso previo)</strong> — definir cómo el cliente sabe cuántos puntos tiene y cómo se aplica el canje en caja. Sin este proceso claro, ninguna campaña de marketing resuelve el problema de los 0 canjes.</div></div>
+        <div class="plan-action"><div class="pa-dot" style="background:#1a2b5e;"></div><div><strong>Campaña de email segmentada por fases de puntos</strong> — una vez operaciones defina el flujo de canje, enviar mensajes diferenciados según nivel de puntos acumulados. No mandar el mismo mensaje a todos los 186 miembros.</div></div>
       </div>
     </div>
 
@@ -1028,6 +1085,12 @@ const ttKPI = {
     {v:'+282',   l:'Seguidores nuevos',  c:'-32% vs marzo · sin nuevo viral',                 cls:'warn', cc:'chg-warn'},
     {v:'524',    l:'Likes (orgánico)',   c:'-72,5% vs marzo · gran caída',                    cls:'down', cc:'chg-down'},
     {v:'48.656', l:'Views TikTok Ads',  c:'Punk + TIMO · 325 destination clicks',            cls:'up',   cc:'chg-up'},
+  ],
+  may:[
+    {v:'26.243', l:'Views',             c:'Sin posts nuevos · solo cola de contenido anterior', cls:'down', cc:'chg-down'},
+    {v:'+1',     l:'Seguidores netos',  c:'12 nuevos · 11 bajas · canal inactivo',             cls:'down', cc:'chg-down'},
+    {v:'888',    l:'Likes',             c:'Mayormente 1–7 mayo · luego cayó a 0',             cls:'warn', cc:'chg-warn'},
+    {v:'0',      l:'Posts publicados',  c:'Mayo completo sin publicaciones',                  cls:'down', cc:'chg-down'},
   ]
 };
 
@@ -1149,6 +1212,13 @@ function initGoalDonuts() {
   mkDonut('goal-tt-shr',   21, false, '#c0392b');
 }
 
+function showTrimTab(id, btn) {
+  document.querySelectorAll('#view-trim .pblock').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('#view-trim .pill').forEach(b => b.classList.remove('active'));
+  document.getElementById('trim-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+
 function showTab(prefix, id, btn) {
   const scope = btn.closest('.view');
   scope.querySelectorAll('.pblock').forEach(b => b.classList.remove('active'));
@@ -1246,10 +1316,10 @@ function initMensualCharts() {
   mkBar('p-alc',   [274098,174682,101568,387982,226491], pHi,26,125,79);
   mkBar('p-clics', [2192,1299,2725,1920,2804],         pHi,26,43,94);
   mkLine('p-ctr',  [1.96,0.69,2.20,0.37,0.89],        GRN);
-  mkBar('tt-views',[18592,9342,65243,57634],      ttHi,26,125,79);
-  mkBar('tt-likes',[580,533,1905,524],            ttHi,26,43,94);
-  mkBar('tt-seg',  [87,52,416,282],               ttHi,42,125,79);
-  mkGroupBar('tt-eng',[5,20,18,8],[5,7,11,1],'Shares','Comments','rgba(201,123,42,0.85)','rgba(26,43,94,0.5)');
+  mkBar('tt-views',[18592,9342,65243,57634,26243], ttHi,26,125,79);
+  mkBar('tt-likes',[580,533,1905,524,888],         ttHi,26,43,94);
+  mkBar('tt-seg',  [87,52,416,282,1],              ttHi,42,125,79);
+  mkGroupBar('tt-eng',[5,20,18,8,2],[5,7,11,1,2],'Shares','Comments','rgba(201,123,42,0.85)','rgba(26,43,94,0.5)');
   renderKPI('ig',igKPI[curMonth.ig]);
   renderKPI('p', pKPI[curMonth.p]);
   renderKPI('tt',ttKPI[curMonth.tt]);
@@ -1285,7 +1355,7 @@ const fidelData = {
   may: {
     type: 'full',
     periodo: 'Mayo 2026',
-    nota: '📈 Tercer mes completo · Retorno al 100% · DB WiFi: 528 clientes',
+    nota: '📈 Tercer mes completo · Retorno al 100% · 186 miembros acumulados',
     miembros:92, recurrentes:64, retorno:100.0,
     prevMiembros:50, prevRecurrentes:37, prevRetorno:97.4,
     cupones: { emitidos:94, canjeados:0, sinCanjear:94, expirados:0, pctExp:'0%', conversion:'55,3%', convertidos:52 },
